@@ -1,0 +1,33 @@
+type Product {
+  id: ID!
+  name: String
+  price: Int
+  imageUrl: String
+  description: String
+}
+
+type Query {
+  products: [Product]
+}
+
+type Mutation {
+  addProduct(
+    title: String
+    price: Int
+    imageUrl: String
+    description: String
+  ): Product
+}
+
+"""
+for multi line doc string
+"""
+input BlogPostContent {
+  title: String
+}
+
+enum AllowedColors {
+  RED
+  Green
+  Blue
+}
