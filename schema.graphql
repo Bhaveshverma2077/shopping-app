@@ -1,13 +1,24 @@
 type Product {
   id: ID!
   name: String
-  price: Int
+  price: Float
   imageUrl: String
   description: String
+  rating: Float
+  discountPercentage: Int
+}
+
+type HeroCarouselItem {
+  id: ID!
+  title: String
+  subtitle: String
+  imageUrl: String
+  link: String
 }
 
 type Query {
   products: [Product]
+  carouselItems: [HeroCarouselItem]
 }
 
 type Mutation {

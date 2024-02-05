@@ -1,13 +1,14 @@
-import { readFileSync } from "fs";
-import path from "path";
+import { CarouselItem, Product } from "./model/index.mjs";
 
 const resolvers = {
   Query: {
-    products(parent, args, contextValue, info) {
-      const products = JSON.parse(
-        readFileSync(path.join(process.cwd(), "products.json"))
-      );
+    async products(parent, args, contextValue, info) {
+      const products = await Product.find({});
       return products;
+    },
+    async carouselItems(parent, args, contextValue, info) {
+      const carouselItems = await CarouselItem.find({});
+      return carouselItems;
     },
   },
 };
