@@ -1,6 +1,7 @@
 import ShoppingCartIcon from "./Icons/ShoppingCartIcon";
 
 const ProductTile = (props: {
+  id: string;
   name: string;
   imgUrl: string;
   mrp: number;
@@ -9,27 +10,38 @@ const ProductTile = (props: {
   return (
     <div className="w-56">
       <div className="h-64 w-full overflow-hidden rounded-lg mb-2">
-        <img className="h-full w-full object-cover" src={props.imgUrl} alt="" />
+        <img
+          className="h-full w-full object-cover"
+          src={`https://firebasestorage.googleapis.com/v0/b/shopping-app-9f7fc.appspot.com/o/${props.imgUrl}?alt=media`}
+          alt=""
+        />
       </div>
       <div className="flex gap-1 justify-between">
         <div className="border border-zinc-800 rounded-lg text-[0.7rem] px-3 py-2">
-          <div>{props.name}</div>
+          <div>
+            {props.name.length > 20
+              ? `${props.name.substring(0, 20)}...`
+              : props.name}
+          </div>
           <div className="flex items-start gap-1">
             Rs.
             <span className="text-[0.6rem] line-through text-zinc-500">
-              {props.mrp}
+              {props.mrp.toFixed(2)}
             </span>
-            {props.mrp - (props.discount * props.mrp) / 100}
+            {(props.mrp - (props.discount * props.mrp) / 100).toFixed(2)}
             <div className="bg-yellow-600 px-1 py-0.5 rounded-md text-[0.6rem]">
               {props.discount}%
             </div>
           </div>
         </div>
-        <div className="flex items-center justify-center bg-gray-900 hover:bg-gray-800 px-4 rounded-lg">
+        <a
+          href={`/products/${props.id}`}
+          className="flex items-center justify-center bg-gray-900 hover:bg-gray-800 px-4 rounded-lg"
+        >
           <div className="scale-75">
             <ShoppingCartIcon></ShoppingCartIcon>
           </div>
-        </div>
+        </a>
       </div>
     </div>
   );

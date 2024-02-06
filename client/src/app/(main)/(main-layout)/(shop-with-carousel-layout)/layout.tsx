@@ -64,7 +64,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 key={carouselItem.id}
                 width={imageContainerRef.current?.clientWidth}
                 className="object-cover h-64 object-center  flex-shrink-0 snap-center"
-                src={carouselItem.imageUrl}
+                src={`https://firebasestorage.googleapis.com/v0/b/shopping-app-9f7fc.appspot.com/o/${carouselItem.imageUrl}?alt=media`}
                 alt=""
               />
             ))}

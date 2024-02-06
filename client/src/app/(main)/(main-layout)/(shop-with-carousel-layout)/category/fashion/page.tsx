@@ -1,21 +1,53 @@
+"use client";
 import ProductTile from "@/app/Components/ProductTile";
+import { gql, useQuery } from "@apollo/client";
+
+const GET_FASHION_PRODUCTS = gql`
+  query GetProducts($typeName: String) {
+    products(type: $typeName) {
+      id
+      name
+      price
+      imageUrl
+      discountPercentage
+    }
+  }
+`;
 
 export default function Page() {
+  const { data, loading, error } = useQuery<{
+    products: [
+      {
+        id: string;
+        name: string;
+        imageUrl: string;
+        price: number;
+        discountPercentage: number;
+      }
+    ];
+  }>(GET_FASHION_PRODUCTS, { variables: { typeName: "fashion" } });
+
   return (
     <>
       <div className="border border-zinc-800 w-full flex items-center justify-center py-6 rounded-lg text-3xl text-zinc-600 font-bold">
-        FASHION
+        ELECTRONICS
       </div>
-      <div className="flex flex-wrap gap-x-5 gap-y-7 justify-evenly">
-        {Array.from({ length: 12 }, () => (
-          <ProductTile
-            name="Galaxy S23 Ultra 512Gb"
-            mrp={124999}
-            discount={12}
-            imgUrl="http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.sanity.io%2Fimages%2Fkud2gmc6%2Fproduction%2Fb0cf088c75287a4030e8630acd1aa690e6059a8a-1200x675.jpg&w=1920&q=75"
-          ></ProductTile>
-        ))}
-      </div>
+      {error && <div>Something Went Wrong!</div>}
+      {loading && <p>Loading...</p>}
+      {!loading && !error && (
+        <div className="flex flex-wrap gap-x-5 gap-y-7 justify-evenly">
+          {data?.products.map((product) => (
+            <ProductTile
+              id={product.id}
+              key={product.id}
+              name={product.name}
+              mrp={product.price}
+              discount={product.discountPercentage}
+              imgUrl={product.imageUrl}
+            ></ProductTile>
+          ))}
+        </div>
+      )}
     </>
   );
 }

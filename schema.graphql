@@ -1,24 +1,27 @@
 type Product {
   id: ID!
-  name: String
-  price: Float
-  imageUrl: String
-  description: String
-  rating: Float
-  discountPercentage: Int
+  name: String!
+  companyName: String
+  type: String!
+  price: Float!
+  imageUrl: String!
+  description: String!
+  rating: Float!
+  discountPercentage: Int!
 }
 
 type HeroCarouselItem {
   id: ID!
-  title: String
-  subtitle: String
-  imageUrl: String
-  link: String
+  title: String!
+  subtitle: String!
+  imageUrl: String!
+  link: String!
 }
 
 type Query {
-  products: [Product]
-  carouselItems: [HeroCarouselItem]
+  products(type: String): [Product!]
+  product(id: String!): Product
+  carouselItems: [HeroCarouselItem!]
 }
 
 type Mutation {

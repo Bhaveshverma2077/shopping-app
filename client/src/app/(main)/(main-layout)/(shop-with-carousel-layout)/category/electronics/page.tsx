@@ -2,9 +2,9 @@
 import ProductTile from "@/app/Components/ProductTile";
 import { gql, useQuery } from "@apollo/client";
 
-const query = gql`
-  query GetProducts {
-    products {
+const GET_ELECTRONIC_PRODUCTS = gql`
+  query GetProducts($typeName: String) {
+    products(type: $typeName) {
       id
       name
       price
@@ -25,7 +25,7 @@ export default function Page() {
         discountPercentage: number;
       }
     ];
-  }>(query);
+  }>(GET_ELECTRONIC_PRODUCTS, { variables: { typeName: "electronic" } });
 
   return (
     <>
@@ -38,6 +38,7 @@ export default function Page() {
         <div className="flex flex-wrap gap-x-5 gap-y-7 justify-evenly">
           {data?.products.map((product) => (
             <ProductTile
+              id={product.id}
               key={product.id}
               name={product.name}
               mrp={product.price}
