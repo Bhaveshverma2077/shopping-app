@@ -6,7 +6,7 @@ import SunIcon from "./Components/Icons/SunIcon";
 import Nav from "./Components/Nav";
 import BookIcon from "./Components/Icons/BookIcon";
 import CreditCardIcon from "./Components/Icons/CreditCardIcon";
-import Cart from "./Components/Cart";
+import Cart from "./Components/CartItem";
 import ChevronRightIcon from "./Components/Icons/ChevronRightIcon";
 import TopOffersTile from "./Components/TopOffersTile";
 import ChevronLeftIcon from "./Components/Icons/ChevronLeftIcon";

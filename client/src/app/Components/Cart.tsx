@@ -1,5 +1,7 @@
+import CartItem from "./CartItem";
 import BookIcon from "./Icons/BookIcon";
 import CreditCardIcon from "./Icons/CreditCardIcon";
+import DeleteIcon from "./Icons/DeleteIcon";
 import Logo from "./Logo";
 
 const Cart = () => {
@@ -20,9 +22,8 @@ const Cart = () => {
           </div>
         </div>
       </div>
-      <div className="border border-zinc-800  h-56 flex items-center justify-center rounded-lg">
-        <p className="text-zinc-700 text-[0.8rem]">Your Cart is Empty!</p>
-      </div>
+      <CartItem></CartItem>
+      <CartItem></CartItem>
     </>
   );
 };

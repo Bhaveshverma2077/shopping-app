@@ -18,8 +18,25 @@ const carouselItemSchema = new mongoose.Schema({
   link: String,
 });
 
+const cartItemSchema = new mongoose.Schema({
+  productId: String,
+  quantity: Number,
+});
+
+const userSchema = new mongoose.Schema({
+  userName: String,
+  email: String,
+  imageUrl: String,
+  password: String,
+  cart: [cartItemSchema],
+});
+
 const Product = mongoose.model("Product", productSchema);
 
 const CarouselItem = mongoose.model("CarouselItem", carouselItemSchema);
 
-export { Product, CarouselItem };
+const CartItem = mongoose.model("CartItem", cartItemSchema);
+
+const User = mongoose.model("User", userSchema);
+
+export { Product, CarouselItem, CartItem, User };

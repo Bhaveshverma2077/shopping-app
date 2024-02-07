@@ -18,10 +18,23 @@ type HeroCarouselItem {
   link: String!
 }
 
+type CartItem {
+  itemId: String!
+  quantity: Int!
+}
+
+type User {
+  email: String!
+  userName: String!
+  imageUrl: String!
+  cart: [CartItem!]
+}
+
 type Query {
   products(type: String): [Product!]
   product(id: String!): Product
   carouselItems: [HeroCarouselItem!]
+  user: User
 }
 
 type Mutation {

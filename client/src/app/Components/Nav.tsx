@@ -7,10 +7,22 @@ import SearchIcon from "./Icons/SearchIcon";
 import SunIcon from "./Icons/SunIcon";
 import TrendingIcon from "./Icons/TrendingIcon";
 import { usePathname, useRouter } from "next/navigation";
+import { gql, useQuery } from "@apollo/client";
 
 const availableDropdownValue = ["electronics", "fashion"];
 
+const GET_USER = gql`
+  query GETUSER {
+    user {
+      userName
+    }
+  }
+`;
+
 const Nav = () => {
+  const { data, loading, error } = useQuery<{ user: { userName: string } }>(
+    GET_USER
+  );
   const searchRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const path = usePathname();
@@ -96,7 +108,7 @@ const Nav = () => {
           src="http://localhost:3000/_next/image?url=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F119785304%3Fv%3D4&w=16&q=75"
           alt=""
         />
-        <p className="text-[0.8rem]">Bhavesh Verma</p>
+        <p className="text-[0.8rem]">{data?.user.userName}</p>
         <ChevronDownIcon></ChevronDownIcon>
       </div>
     </nav>
