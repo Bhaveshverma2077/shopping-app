@@ -22,9 +22,10 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["localhost:3000"],
-    allowedHeaders: ["Authorization"],
-    credentials: true,
+    origin: ["http://localhost:3000"],
+    allowedHeaders: ["Authorization", "Content-Type"],
+    methods: ["GET", "POST", "OPTIONS"],
+    // credentials: true,
   })
 );
 app.use(express.json());
@@ -50,21 +51,14 @@ app.use(
     context: async ({ req, res }) => {
       const token = req.headers.authorization || "";
       let user;
-      console.log(token);
       if (token !== "") {
+        let tokenObject = {};
         try {
-          const jsonData = jwt.verify(token, process.env.JWT_SECRET);
-        } catch (error) {
-          console.log(error);
-        }
-        return {};
-        console.log(jsonData);
-        const { email } = JSON.parse(jsonData);
-        console.log(email);
-        user = await User.find({ email });
-        console.log(user);
+          tokenObject = jwt.verify(token.split(" ")[1], process.env.JWT_SECRET);
+        } catch (error) {}
+        const { email } = tokenObject;
+        user = await User.findOne({ email });
       }
-      console.log(user);
       return { user };
     },
   })

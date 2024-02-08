@@ -19,7 +19,7 @@ type HeroCarouselItem {
 }
 
 type CartItem {
-  itemId: String!
+  productId: String!
   quantity: Int!
 }
 
@@ -32,18 +32,15 @@ type User {
 
 type Query {
   products(type: String): [Product!]
+  productsByIds(productIds: [String]): [Product!]
   product(id: String!): Product
   carouselItems: [HeroCarouselItem!]
   user: User
 }
 
 type Mutation {
-  addProduct(
-    title: String
-    price: Int
-    imageUrl: String
-    description: String
-  ): Product
+  incOrDecCartItem(productId: String, inc: Boolean): CartItem
+  removeCartItem(productId: String): CartItem
 }
 
 """

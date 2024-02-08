@@ -36,12 +36,68 @@ const resolvers = {
       // const x = Product.insertMany(
       //   JSON.parse(fs.readFileSync(path.join(process.cwd(), "products.json")))
       // );
-      const products = await Product.find({ _id: args.id });
-      return products[0];
+      const product = await Product.findOne({ _id: args.id });
+      return product;
     },
+    async productsByIds(parent, args, contextValue, info) {
+      const productIds = args.productIds;
+      const products = await Promise.all(
+        productIds.map((id) => Product.findOne({ _id: id }))
+      );
+      return products;
+    },
+
     async carouselItems(parent, args, contextValue, info) {
       const carouselItems = await CarouselItem.find({});
       return carouselItems;
+    },
+  },
+  Mutation: {
+    async incOrDecCartItem(parent, args, contextValue, info) {
+      const user = contextValue.user;
+      const cart = contextValue.user.cart;
+      const productId = args.productId;
+      const inc = args.inc;
+      console.log(inc);
+      const cartItem = cart.find((item) => item.productId === productId);
+      const cartItemQuatity = cartItem.quantity;
+      console.log(cartItemQuatity);
+      if (cartItem) {
+        // inc quantity
+        if (cartItemQuatity === 1 && inc) {
+          //remove
+          await User.updateOne(
+            { email: user.email },
+            { $pull: { cart: { productId } } }
+          );
+        } else {
+          await User.findOneAndUpdate(
+            { email: user.email, "cart.productId": productId },
+            { $inc: { "cart.$.quantity": inc ? 1 : -1 } }
+          );
+        }
+        return (await User.findOne({ email: user.email })).cart.find(
+          (item) => item.productId === productId
+        );
+      }
+      // push with quantity=1
+      if (x) {
+        await User.updateOne(
+          { email: user.email },
+          { $push: { cart: { productId, quantity: 1 } } }
+        );
+      }
+      return (await User.findOne({ email: user.email })).cart.find(
+        (item) => item.productId === productId
+      );
+    },
+    async decrementCartItem(parent, args, contextValue, info) {
+      const products = await Product.find({ _id: args.id });
+      return products[0];
+    },
+    async deleteCartItem(parent, args, contextValue, info) {
+      const products = await Product.find({ _id: args.id });
+      return products[0];
     },
   },
 };

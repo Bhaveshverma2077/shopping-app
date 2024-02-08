@@ -26,6 +26,7 @@ export default function Page() {
   const userNameFieldRef = useRef<HTMLInputElement>(null);
   const emailFieldRef = useRef<HTMLInputElement>(null);
   const passwordFieldRef = useRef<HTMLInputElement>(null);
+  const [error, setError] = useState<null | string>(null);
   const router = useRouter();
   // const { data, loading, error } = useQuery<{
   //   products: [
@@ -44,6 +45,7 @@ export default function Page() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
+          setError(null);
           console.log(emailFieldRef.current?.value);
           fetch("http://localhost:5050/auth", {
             method: "POST",
@@ -65,7 +67,7 @@ export default function Page() {
               }: { token: string | undefined; error: string | undefined } =
                 JSON.parse(data);
               if (error) {
-                console.log(error);
+                setError(error);
                 return;
               }
               localStorage.setItem("token", token!);
@@ -133,7 +135,6 @@ export default function Page() {
             <EmailIcon></EmailIcon>
           </div>
         </div>
-
         <div className="relative">
           <input
             ref={passwordFieldRef}
@@ -151,6 +152,7 @@ export default function Page() {
         <button className="bg-gray-800 w-full py-2 rounded-lg" type="submit">
           Log In
         </button>
+        <div className="text-red-700 font-bold text-[0.7rem]">{error}</div>
       </form>
     </div>
   );

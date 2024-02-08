@@ -6,6 +6,7 @@ const authController = async (req, res) => {
   const email = new String(req.body.email).toLowerCase();
   const password = new String(req.body.password).toLowerCase();
   const login = req.body.login;
+  console.log(login);
   if (login) {
     let user;
     try {
@@ -15,7 +16,9 @@ const authController = async (req, res) => {
     }
     if (!user) {
       res.json(
-        JSON.stringify({ error: "account does not with the email provided" })
+        JSON.stringify({
+          error: "Account does not exists with the email provided!",
+        })
       );
       return;
     }
@@ -26,11 +29,13 @@ const authController = async (req, res) => {
       res.json(JSON.stringify({ token }));
       return;
     }
-    res.json(JSON.stringify({ error: "Password Incorrect" }));
+    res.json(JSON.stringify({ error: "Password Incorrect!" }));
     return;
   }
   if (user) {
-    res.json(JSON.stringify({ error: "account with the email alredy exists" }));
+    res.json(
+      JSON.stringify({ error: "Account with the email already exists!" })
+    );
     return;
   }
   const newUser = new User({ email, password: bcrypt.hash(password, 12) });

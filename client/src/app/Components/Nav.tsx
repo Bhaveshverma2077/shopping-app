@@ -8,6 +8,7 @@ import SunIcon from "./Icons/SunIcon";
 import TrendingIcon from "./Icons/TrendingIcon";
 import { usePathname, useRouter } from "next/navigation";
 import { gql, useQuery } from "@apollo/client";
+import UserIcon from "./Icons/UserIcon";
 
 const availableDropdownValue = ["electronics", "fashion"];
 
@@ -23,6 +24,9 @@ const Nav = () => {
   const { data, loading, error } = useQuery<{ user: { userName: string } }>(
     GET_USER
   );
+  console.log("data");
+  console.log(data);
+
   const searchRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const path = usePathname();
@@ -104,11 +108,14 @@ const Nav = () => {
         </div>
       </div>
       <div className="border gap-2 border-zinc-900 flex items-center justify-center p-2 rounded-lg">
-        <img
+        {/* <img
           src="http://localhost:3000/_next/image?url=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F119785304%3Fv%3D4&w=16&q=75"
           alt=""
-        />
-        <p className="text-[0.8rem]">{data?.user.userName}</p>
+        /> */}
+        <div className="scale-75">
+          <UserIcon></UserIcon>
+        </div>
+        <p className="text-[0.8rem]">{data?.user?.userName}</p>
         <ChevronDownIcon></ChevronDownIcon>
       </div>
     </nav>
