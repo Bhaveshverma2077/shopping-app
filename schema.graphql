@@ -21,6 +21,13 @@ type HeroCarouselItem {
 type CartItem {
   productId: String!
   quantity: Int!
+  pricePerUnit: Float!
+}
+
+type OrderItem {
+  id: ID!
+  products: [CartItem!]!
+  finalPriceIncludingTax: Float!
 }
 
 type User {
@@ -28,6 +35,7 @@ type User {
   userName: String!
   imageUrl: String!
   cart: [CartItem!]
+  orders: [OrderItem!]!
 }
 
 type Query {
@@ -41,6 +49,7 @@ type Query {
 type Mutation {
   incOrDecCartItem(productId: String, inc: Boolean): CartItem
   removeCartItem(productId: String): CartItem
+  placeOrder: OrderItem!
 }
 
 """

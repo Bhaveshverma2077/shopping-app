@@ -2,13 +2,13 @@
 import ChevronLeftIcon from "@/app/Components/Icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/app/Components/Icons/ChevronRightIcon";
 import ShoppingCartIcon from "@/app/Components/Icons/ShoppingCartIcon";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import gql from "graphql-tag";
 import { useParams } from "next/navigation";
 import { useRef } from "react";
 
-const query = gql`
-  query ExampleQuery($productId: String!) {
+const GET_PRODUCT = gql`
+  query GetProductById($productId: String!) {
     product(id: $productId) {
       name
       companyName
@@ -17,6 +17,14 @@ const query = gql`
       price
       rating
       discountPercentage
+    }
+  }
+`;
+
+const ADD_CART_ITEM = gql`
+  mutation IncCartItem($productId: String!, $inc: Boolean!) {
+    incOrDecCartItem(productId: $productId, inc: $inc) {
+      quantity
     }
   }
 `;
@@ -34,9 +42,13 @@ export default function Page() {
       companyName: string;
       discountPercentage: number;
     };
-  }>(query, {
+  }>(GET_PRODUCT, {
     variables: { productId: params.productId },
   });
+  const [incrOrDecProductQuantity] = useMutation(ADD_CART_ITEM, {
+    refetchQueries: ["GETUSERCART"],
+  });
+
   return (
     <div>
       <div className="flex gap-20 pb-6">
@@ -81,7 +93,14 @@ export default function Page() {
               </div>
             </div>
           </div>
-          <button className="flex gap-2 items-center border border-gray-900 bg-gray-900 py-4 px-8 rounded-lg">
+          <button
+            onClick={async () => {
+              await incrOrDecProductQuantity({
+                variables: { productId: params.productId, inc: true },
+              });
+            }}
+            className="flex gap-2 items-center border border-gray-900 bg-gray-900 py-4 px-8 rounded-lg"
+          >
             <p className="text-[0.7rem]">ADD TO CART</p>
             <ShoppingCartIcon></ShoppingCartIcon>
           </button>
@@ -91,7 +110,7 @@ export default function Page() {
         ref={imageRef}
         className="flex scroll-smooth scrollbar-hide overflow-x-scroll  snap-x w-1/2  gap-2"
       >
-        {Array.from({ length: 12 }, (_, i) => (
+        {[0].map((_, i) => (
           <div className="relative rounded-lg snap-center overflow-hidden flex-shrink-0 w-[6rem] h-[6rem] border-white border-2">
             <img
               onClick={() => {
@@ -103,7 +122,7 @@ export default function Page() {
                 });
               }}
               className="object-cover h-[6rem] w-[6rem]"
-              src="http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.sanity.io%2Fimages%2Fkud2gmc6%2Fproduction%2Fb0cf088c75287a4030e8630acd1aa690e6059a8a-1200x675.jpg&w=1920&q=75"
+              src={`https://firebasestorage.googleapis.com/v0/b/shopping-app-9f7fc.appspot.com/o/${data?.product.imageUrl}?alt=media`}
               alt=""
             />
           </div>

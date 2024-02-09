@@ -29,3 +29,13 @@ body {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+.customized-scrollbar::-webkit-scrollbar {
+  width: 0.5rem;
+  background-color: rgb(62, 62, 62);
+  border-radius: 1rem;
+}
+.customized-scrollbar::-webkit-scrollbar-thumb {
+  background-color: grey;
+  border-radius: 1rem;
+}

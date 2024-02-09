@@ -13,9 +13,13 @@ import UserIcon from "./Icons/UserIcon";
 const availableDropdownValue = ["electronics", "fashion"];
 
 const GET_USER = gql`
-  query GETUSER {
+  query GETUSERNAME {
     user {
       userName
+      cart {
+        productId
+        quantity
+      }
     }
   }
 `;

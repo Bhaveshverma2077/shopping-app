@@ -1,5 +1,5 @@
+import Link from "next/link";
 import ChevronRightIcon from "./Icons/ChevronRightIcon";
-import SunIcon from "./Icons/SunIcon";
 
 const DropDownTile = (props: {
   icon: React.ReactNode;
@@ -7,7 +7,7 @@ const DropDownTile = (props: {
   href: string;
 }) => {
   return (
-    <a
+    <Link
       href={props.href}
       className="flex hover:bg-zinc-700 p-1 rounded-lg items-center justify-between"
     >
@@ -16,7 +16,7 @@ const DropDownTile = (props: {
         <p className="text-[0.7rem]">{props.title}</p>
       </div>
       <ChevronRightIcon></ChevronRightIcon>
-    </a>
+    </Link>
   );
 };
 
