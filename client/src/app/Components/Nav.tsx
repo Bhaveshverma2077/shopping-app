@@ -1,39 +1,37 @@
 "use client";
+
 import { useRef } from "react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { gql, useQuery } from "@apollo/client";
+
 import DropDownTile from "./DropDownTile";
 import ChevronDownIcon from "./Icons/ChevronDownIcon";
-import ChevronRightIcon from "./Icons/ChevronRightIcon";
 import SearchIcon from "./Icons/SearchIcon";
 import SunIcon from "./Icons/SunIcon";
 import TrendingIcon from "./Icons/TrendingIcon";
-import { usePathname, useRouter } from "next/navigation";
-import { gql, useQuery } from "@apollo/client";
 import UserIcon from "./Icons/UserIcon";
+import LogOutButton from "./LogOutButton";
 
 const availableDropdownValue = ["electronics", "fashion"];
 
-const GET_USER = gql`
-  query GETUSERNAME {
+const GET_USERNAME = gql`
+  query Username {
     user {
       userName
-      cart {
-        productId
-        quantity
-      }
     }
   }
 `;
 
 const Nav = () => {
-  const { data, loading, error } = useQuery<{ user: { userName: string } }>(
-    GET_USER
-  );
-  console.log("data");
-  console.log(data);
-
   const searchRef = useRef<HTMLInputElement>(null);
-  const router = useRouter();
   const path = usePathname();
+  const router = useRouter();
+
+  const { data, loading, error } = useQuery<{ user: { userName: string } }>(
+    GET_USERNAME
+  );
+
   const dropDownValue =
     path.split("/")[1] === "category" &&
     availableDropdownValue.includes(path.split("/")[2])
@@ -41,6 +39,7 @@ const Nav = () => {
       : path === "/"
       ? "trending"
       : null;
+  const isLoggedIn = !!data?.user;
 
   return (
     <nav className="flex gap-2 items-center">
@@ -106,22 +105,37 @@ const Nav = () => {
           <SearchIcon></SearchIcon>
         </div>
       </form>
-      <div className="border border-zinc-900 fl p-1 rounded-lg">
+      {/* <div className="border border-zinc-900 fl p-1 rounded-lg">
         <div className="scale-[0.6]">
           <SunIcon></SunIcon>
         </div>
-      </div>
-      <div className="border gap-2 border-zinc-900 flex items-center justify-center p-2 rounded-lg">
-        {/* <img
-          src="http://localhost:3000/_next/image?url=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F119785304%3Fv%3D4&w=16&q=75"
-          alt=""
-        /> */}
-        <div className="scale-75">
-          <UserIcon></UserIcon>
+      </div> */}
+      {isLoggedIn ? (
+        <div className="relative border gap-2 group border-zinc-900 flex items-center justify-center p-2 rounded-lg">
+          <div className="z-20 absolute h-5 w-40 top-10 right-0"></div>
+          <img
+            src="http://localhost:3000/_next/image?url=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F119785304%3Fv%3D4&w=16&q=75"
+            alt=""
+          />
+          <div className="scale-75">
+            <UserIcon></UserIcon>
+          </div>
+          <p className="text-[0.8rem]">{data?.user?.userName}</p>
+
+          <ChevronDownIcon></ChevronDownIcon>
+          <div className="z-20 hidden absolute -bottom-16 right-0 rounded-lg bg-zinc-900 w-28 p-2 group-hover:flex flex-col gap-1">
+            <LogOutButton></LogOutButton>
+          </div>
         </div>
-        <p className="text-[0.8rem]">{data?.user?.userName}</p>
-        <ChevronDownIcon></ChevronDownIcon>
-      </div>
+      ) : (
+        <Link
+          href={"/auth"}
+          className="relative border gap-2 group border-zinc-900 flex items-center justify-center p-2 rounded-lg"
+        >
+          <div className="z-20 absolute h-5 w-40 top-10 right-0"></div>
+          <p className="text-[0.8rem]">Log In</p>
+        </Link>
+      )}
     </nav>
   );
 };

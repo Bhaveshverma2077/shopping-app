@@ -8,6 +8,7 @@ import OrderItem from "./OrderItem";
 import { useReducer, useState } from "react";
 import Cart from "./Cart";
 import ShoppingCartIcon from "./Icons/ShoppingCartIcon";
+import Orders from "./Orders";
 
 const CartAndOrdersLayout = () => {
   const [cartOrOrders, changeCartOrOrders] = useReducer(
@@ -15,11 +16,7 @@ const CartAndOrdersLayout = () => {
       if (action.type === "cart") {
         return <Cart></Cart>;
       }
-      return (
-        <div className="max-h-[50rem] customized-scrollbar overflow-hidden overflow-y-auto">
-          <OrderItem></OrderItem>
-        </div>
-      );
+      return <Orders></Orders>;
     },
     <Cart></Cart>
   );
