@@ -2,7 +2,6 @@
 import { gql, useQuery } from "@apollo/client";
 import CartItem from "./CartItem";
 import BookIcon from "./Icons/BookIcon";
-import CreditCardIcon from "./Icons/CreditCardIcon";
 import Logo from "./Logo";
 import OrderItem from "./OrderItem";
 import { useReducer, useState } from "react";
