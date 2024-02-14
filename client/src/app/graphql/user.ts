@@ -7,6 +7,7 @@ const GET_USER = gql`
       cart {
         productId
         quantity
+        discountPerUnit
         pricePerUnit
       }
       orders {

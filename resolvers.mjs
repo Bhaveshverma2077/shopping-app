@@ -61,10 +61,10 @@ const resolvers = {
   Mutation: {
     async incOrDecCartItem(parent, args, contextValue, info) {
       const user = contextValue.user;
+      console.log(user);
       const cart = contextValue.user.cart;
       const productId = args.productId;
       const inc = args.inc;
-      console.log(inc);
       const cartItem = cart.find((item) => item.productId === productId);
       const cartItemQuatity = cartItem?.quantity;
       console.log(cartItemQuatity);
@@ -88,13 +88,16 @@ const resolvers = {
       }
       // push with quantity=1
       if (inc) {
+        const product = await Product.findOne({ _id: productId });
         await User.updateOne(
           { email: user.email },
           {
             $push: {
               cart: {
                 productId,
-                pricePerUnit: (await Product.findOne({ _id: productId })).price,
+                pricePerUnit: product.price,
+                discountPerUnit:
+                  (product.discountPercentage * product.price) / 100,
                 quantity: 1,
               },
             },
@@ -106,14 +109,18 @@ const resolvers = {
       );
     },
     async placeOrder(parent, args, contextValue, info) {
+      const taxPercent = 5;
       const user = contextValue.user;
-      const subTotal = user.cart.reduce(
-        (acc, value) => acc + value.pricePerUnit * value.quantity,
+      const priceIncludingDiscount = user.cart.reduce(
+        (acc, value) =>
+          acc + (value.pricePerUnit - value.discountPerUnit) * value.quantity,
         0
       );
-      const finalPriceIncludingTax = subTotal + subTotal / 20;
+      const finalPriceIncludingTax =
+        priceIncludingDiscount + (priceIncludingDiscount * taxPercent) / 100;
       const orderData = { products: user.cart, finalPriceIncludingTax };
       const order = new Order(orderData);
+
       await User.findOneAndUpdate(
         { email: user.email },
         { $push: { orders: order } }

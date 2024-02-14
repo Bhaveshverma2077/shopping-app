@@ -1,8 +1,6 @@
-import { useState } from "react";
-
 import { useMutation, useQuery } from "@apollo/client";
-
 import gql from "graphql-tag";
+
 import DeleteIcon from "./Icons/DeleteIcon";
 import { Product } from "../types";
 
@@ -50,8 +48,6 @@ const CartItem = ({
     refetchQueries: ["GETUSER"],
   });
 
-  const [updatedquantity, setUpdatedQuantity] = useState(quantity);
-
   if (error) return <p>Error</p>;
   if (loading) return <p>Skeleton</p>;
 
@@ -78,27 +74,22 @@ const CartItem = ({
           <div className="w-16 flex border border-zinc-800 rounded-sm overflow-hidden">
             <a
               onClick={async () => {
-                const { data } = await incOrDecProductQuantity({
+                await incOrDecProductQuantity({
                   variables: { productId, inc: false },
                 });
-                if (data.incOrDecCartItem && data.incOrDecCartItem.quantity)
-                  setUpdatedQuantity(data.incOrDecCartItem.quantity);
-                else refetchCart();
               }}
               className="cursor-pointer text-[0.9rem] bg-zinc-800 flex-1 flex justify-center items-center"
             >
               <p>-</p>
             </a>
             <div className="text-[0.9rem] flex items-center flex-1 justify-center">
-              <p>{updatedquantity}</p>
+              <p>{quantity}</p>
             </div>
             <a
               onClick={async () => {
-                const { data } = await incOrDecProductQuantity({
+                await incOrDecProductQuantity({
                   variables: { productId, inc: true },
                 });
-                if (data.incOrDecCartItem && data.incOrDecCartItem.quantity)
-                  setUpdatedQuantity(data.incOrDecCartItem.quantity);
               }}
               className="cursor-pointer text-[0.9rem] bg-zinc-800 flex items-center flex-1 justify-center"
             >
@@ -108,7 +99,13 @@ const CartItem = ({
         </div>
       </div>
       <div className="flex flex-end w-full">
-        <p>${product.price}</p>
+        <p>
+          $
+          {(
+            product.price -
+            (product.discountPercentage * product.price) / 100
+          ).toFixed(2)}
+        </p>
       </div>
     </div>
   );

@@ -16,7 +16,7 @@ const Orders = () => {
     };
   }>(GET_USER);
 
-  if (!userData?.user) {
+  if (!userData?.user || userData.user.orders.length === 0) {
     // if not logged in
     return (
       <div className="border border-zinc-800  h-28 flex gap-4 items-center justify-center px-3 rounded-lg">

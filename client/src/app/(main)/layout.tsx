@@ -2,7 +2,6 @@
 import {
   ApolloClient,
   ApolloProvider,
-  HttpLink,
   InMemoryCache,
   createHttpLink,
 } from "@apollo/client";
@@ -14,9 +13,6 @@ const httpLink = createHttpLink({
 
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem("token");
-  console.log("token");
-  console.log(token);
-
   return {
     headers: { ...headers, Authorization: token ? `Bearer ${token}` : "" },
   };

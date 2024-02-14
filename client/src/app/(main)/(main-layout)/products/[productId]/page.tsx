@@ -46,7 +46,7 @@ export default function Page() {
     variables: { productId: params.productId },
   });
   const [incrOrDecProductQuantity] = useMutation(ADD_CART_ITEM, {
-    refetchQueries: ["GETUSERCART"],
+    refetchQueries: ["GETUSER"],
   });
 
   return (
@@ -111,7 +111,10 @@ export default function Page() {
         className="flex scroll-smooth scrollbar-hide overflow-x-scroll  snap-x w-1/2  gap-2"
       >
         {[0].map((_, i) => (
-          <div className="relative rounded-lg snap-center overflow-hidden flex-shrink-0 w-[6rem] h-[6rem] border-white border-2">
+          <div
+            key={"key"}
+            className="relative rounded-lg snap-center overflow-hidden flex-shrink-0 w-[6rem] h-[6rem] border-white border-2"
+          >
             <img
               onClick={() => {
                 const firstElementInViewIndex = Math.round(

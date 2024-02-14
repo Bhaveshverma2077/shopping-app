@@ -22,6 +22,7 @@ const cartItemSchema = new mongoose.Schema({
   productId: String,
   quantity: Number,
   pricePerUnit: Number,
+  discountPerUnit: Number,
 });
 
 const orderItemSchema = new mongoose.Schema({

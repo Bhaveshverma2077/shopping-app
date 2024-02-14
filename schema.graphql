@@ -22,12 +22,14 @@ type CartItem {
   productId: String!
   quantity: Int!
   pricePerUnit: Float!
+  discountPerUnit: Float
 }
 
 type OrderItem {
   id: ID!
   products: [CartItem!]!
   finalPriceIncludingTax: Float!
+  discountPerUnit: Float
 }
 
 type User {
