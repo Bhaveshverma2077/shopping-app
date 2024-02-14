@@ -1,14 +1,48 @@
 import { User } from "../model/index.mjs";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import isEmail from "validator/lib/isEmail.js";
+import isStrongPassword from "validator/lib/isStrongPassword.js";
+import isEmpty from "validator/lib/isEmpty.js";
 
 const authController = async (req, res) => {
   const email = new String(req.body.email).toLowerCase();
-  const password = new String(req.body.password).toLowerCase();
+  if (!isEmail(email)) {
+    res.json(JSON.stringify({ error: "Invalid Email!" }));
+    return;
+  }
+  const password = new String(req.body.password);
+  if (
+    !isStrongPassword(password, {
+      minLength: 8,
+      minLowercase: 1,
+      minUppercase: 1,
+      minSymbols: 1,
+      minNumbers: 1,
+    })
+  ) {
+    res.json(
+      JSON.stringify({
+        error:
+          "Password Should be at least 8 characters including one number, one uppercase alphabet, one lowercase alphabet and one symbol!",
+      })
+    );
+    return;
+  }
+  const userName = new String(req.body.userName).toLowerCase();
+  if (isEmpty(userName)) {
+    res.json(
+      JSON.stringify({
+        error: "Username should not be empty",
+      })
+    );
+    return;
+  }
   const login = req.body.login;
-  console.log(login);
+
+  let user;
+  // Login
   if (login) {
-    let user;
     try {
       user = await User.findOne({ email });
     } catch (error) {
@@ -38,10 +72,18 @@ const authController = async (req, res) => {
     );
     return;
   }
-  const newUser = new User({ email, password: bcrypt.hash(password, 12) });
+  // Sign Up
+  const newUser = new User({
+    userName,
+    email,
+    password: await bcrypt.hash(password, 12),
+    cart: [],
+    imageUrl: "",
+    orders: [],
+  });
   try {
     await newUser.save();
-    const token = jwt.sign(JSON.stringify({ email }), "OURLITTESECRET");
+    const token = jwt.sign(JSON.stringify({ email }), process.env.JWT_SECRET);
     res.json(JSON.stringify({ token }));
   } catch (error) {
     res.json(JSON.stringify({ error: "Something Went Wrong!" }));

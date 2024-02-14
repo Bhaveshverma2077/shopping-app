@@ -26,6 +26,7 @@ export default function Page() {
   const userNameFieldRef = useRef<HTMLInputElement>(null);
   const emailFieldRef = useRef<HTMLInputElement>(null);
   const passwordFieldRef = useRef<HTMLInputElement>(null);
+  const confirmPasswordFieldRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<null | string>(null);
   const router = useRouter();
   // const { data, loading, error } = useQuery<{
@@ -46,7 +47,13 @@ export default function Page() {
         onSubmit={(e) => {
           e.preventDefault();
           setError(null);
-          console.log(emailFieldRef.current?.value);
+          if (
+            passwordFieldRef.current?.value !==
+            confirmPasswordFieldRef.current?.value
+          ) {
+            setError("Passwords do not match");
+            return;
+          }
           fetch("http://localhost:5050/auth", {
             method: "POST",
             headers: {
@@ -149,10 +156,27 @@ export default function Page() {
           </div>
         </div>
 
+        {!isLogin && (
+          <div className="relative">
+            <input
+              ref={confirmPasswordFieldRef}
+              className="p-1 pl-10 rounded-lg outline-none bg-black"
+              type="password"
+              placeholder="Confirm Password"
+              name=""
+              id=""
+            />
+            <div className="absolute top-1 left-1 scale-75">
+              <div></div>
+            </div>
+          </div>
+        )}
         <button className="bg-gray-800 w-full py-2 rounded-lg" type="submit">
-          Log In
+          {isLogin ? "Log In" : "Sign Up"}
         </button>
-        <div className="text-red-700 font-bold text-[0.7rem]">{error}</div>
+        <div className="text-red-700 w-64 text-center font-bold text-[0.7rem]">
+          {error}
+        </div>
       </form>
     </div>
   );
