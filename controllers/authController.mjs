@@ -6,12 +6,12 @@ import isStrongPassword from "validator/lib/isStrongPassword.js";
 import isEmpty from "validator/lib/isEmpty.js";
 
 const authController = async (req, res) => {
-  const email = new String(req.body.email).toLowerCase();
+  const email = req.body.email.toLowerCase();
   if (!isEmail(email)) {
     res.json(JSON.stringify({ error: "Invalid Email!" }));
     return;
   }
-  const password = new String(req.body.password);
+  const password = req.body.password;
   if (
     !isStrongPassword(password, {
       minLength: 8,
@@ -29,7 +29,7 @@ const authController = async (req, res) => {
     );
     return;
   }
-  const userName = new String(req.body.userName).toLowerCase();
+  const userName = req.body.userName.toLowerCase();
   if (isEmpty(userName)) {
     res.json(
       JSON.stringify({
@@ -56,7 +56,6 @@ const authController = async (req, res) => {
       );
       return;
     }
-    console.log(password, user.password);
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (isPasswordCorrect) {
       const token = jwt.sign(JSON.stringify({ email }), process.env.JWT_SECRET);

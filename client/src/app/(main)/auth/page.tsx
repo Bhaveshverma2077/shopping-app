@@ -48,8 +48,9 @@ export default function Page() {
           e.preventDefault();
           setError(null);
           if (
+            !isLogin &&
             passwordFieldRef.current?.value !==
-            confirmPasswordFieldRef.current?.value
+              confirmPasswordFieldRef.current?.value
           ) {
             setError("Passwords do not match");
             return;
