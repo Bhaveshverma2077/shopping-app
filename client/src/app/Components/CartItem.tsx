@@ -3,6 +3,7 @@ import gql from "graphql-tag";
 
 import DeleteIcon from "./Icons/DeleteIcon";
 import { Product } from "../types";
+import { generateImageUrl } from "../utils";
 
 const GET_PRODUCT = gql`
   query ($productId: String!) {
@@ -58,7 +59,7 @@ const CartItem = ({
       <div className="flex-shrink-0 border border-zinc-800 rounded-lg overflow-hidden">
         <img
           className="w-20 h-20 object-cover"
-          src={`https://firebasestorage.googleapis.com/v0/b/shopping-app-9f7fc.appspot.com/o/${product.imageUrl}?alt=media`}
+          src={generateImageUrl(product.imageUrl)}
           alt=""
         />
       </div>

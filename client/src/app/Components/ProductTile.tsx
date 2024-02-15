@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ShoppingCartIcon from "./Icons/ShoppingCartIcon";
+import { generateImageUrl } from "../utils";
 
 const ProductTile = (props: {
   id: string;
@@ -13,7 +14,7 @@ const ProductTile = (props: {
       <div className="h-64 w-full overflow-hidden rounded-lg mb-2">
         <img
           className="h-full w-full object-cover"
-          src={`https://firebasestorage.googleapis.com/v0/b/shopping-app-9f7fc.appspot.com/o/${props.imgUrl}?alt=media`}
+          src={generateImageUrl(props.imgUrl)}
           alt=""
         />
       </div>

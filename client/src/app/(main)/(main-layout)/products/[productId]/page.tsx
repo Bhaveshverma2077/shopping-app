@@ -2,6 +2,7 @@
 import ChevronLeftIcon from "@/app/Components/Icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/app/Components/Icons/ChevronRightIcon";
 import ShoppingCartIcon from "@/app/Components/Icons/ShoppingCartIcon";
+import { generateImageUrl } from "@/app/utils";
 import { useMutation, useQuery } from "@apollo/client";
 import gql from "graphql-tag";
 import { useParams } from "next/navigation";
@@ -55,7 +56,7 @@ export default function Page() {
         <div className="relative rounded-lg overflow-hidden w-1/2">
           <img
             className="object-cover h-[28rem] w-full"
-            src={`https://firebasestorage.googleapis.com/v0/b/shopping-app-9f7fc.appspot.com/o/${data?.product.imageUrl}?alt=media`}
+            src={generateImageUrl(data?.product.imageUrl)}
             alt=""
           />
           <div className="absolute bottom-4 right-4 flex gap-2">
@@ -125,7 +126,7 @@ export default function Page() {
                 });
               }}
               className="object-cover h-[6rem] w-[6rem]"
-              src={`https://firebasestorage.googleapis.com/v0/b/shopping-app-9f7fc.appspot.com/o/${data?.product.imageUrl}?alt=media`}
+              src={generateImageUrl(data?.product.imageUrl)}
               alt=""
             />
           </div>

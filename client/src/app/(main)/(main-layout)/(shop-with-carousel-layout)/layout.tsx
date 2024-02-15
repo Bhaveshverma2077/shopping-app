@@ -1,6 +1,7 @@
 "use client";
 import ChevronLeftIcon from "@/app/Components/Icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/app/Components/Icons/ChevronRightIcon";
+import { generateImageUrl } from "@/app/utils";
 import { gql, useQuery } from "@apollo/client";
 import { useEffect, useReducer, useRef, useState } from "react";
 
@@ -71,7 +72,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 key={carouselItem.id}
                 width={imageContainerRef.current?.clientWidth}
                 className="object-cover h-64 object-center  flex-shrink-0 snap-center"
-                src={`https://firebasestorage.googleapis.com/v0/b/shopping-app-9f7fc.appspot.com/o/${carouselItem.imageUrl}?alt=media`}
+                src={generateImageUrl(carouselItem.imageUrl)}
                 alt=""
               />
             ))}
