@@ -20,23 +20,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const scrollDivRef = useRef<HTMLDivElement>(null);
 
-  const [, forceUpdate] = useReducer((x) => x + 1, 0);
-
   const [selectedCarouselItemIndex, updateSelectedCarouselItemIndex] =
     useState<number>(0);
 
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
   useEffect(() => {
     window.addEventListener("resize", forceUpdate);
     return () => {
       window.removeEventListener("resize", forceUpdate);
     };
   }, []);
-
-  useEffect(() => {
-    scrollDivRef.current?.scrollTo({
-      left: selectedCarouselItemIndex * imageContainerRef.current?.clientWidth!,
-    });
-  }, [selectedCarouselItemIndex]);
 
   const { data, loading, error } = useQuery<{
     carouselItems: Array<{
@@ -47,6 +40,20 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       link: string;
     }>;
   }>(query);
+
+  useEffect(() => {
+    scrollDivRef.current?.scrollTo({
+      left: selectedCarouselItemIndex * imageContainerRef.current?.clientWidth!,
+    });
+    const timer = setInterval(() => {
+      updateSelectedCarouselItemIndex(
+        (index) => (index + 1) % (data?.carouselItems.length ?? 2)
+      );
+    }, 5000);
+    return () => {
+      clearInterval(timer);
+    };
+  }, [selectedCarouselItemIndex]);
 
   return (
     <>
