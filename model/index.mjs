@@ -30,6 +30,12 @@ const orderItemSchema = new mongoose.Schema({
   finalPriceIncludingTax: Number,
 });
 
+const topOfferSchema = new mongoose.Schema({
+  title: String,
+  link: String,
+  imageUrl: String,
+});
+
 const userSchema = new mongoose.Schema({
   userName: String,
   email: String,
@@ -45,8 +51,10 @@ const CarouselItem = mongoose.model("CarouselItem", carouselItemSchema);
 
 const CartItem = mongoose.model("CartItem", cartItemSchema);
 
+const TopOffer = mongoose.model("TopOffer", topOfferSchema);
+
 const User = mongoose.model("User", userSchema);
 
 const Order = mongoose.model("Order", orderItemSchema);
 
-export { Product, CarouselItem, CartItem, User, Order };
+export { Product, CarouselItem, CartItem, User, Order, TopOffer };

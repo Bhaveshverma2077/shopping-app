@@ -1,12 +1,10 @@
 import {
   CarouselItem,
-  CartItem,
   Order,
   Product,
+  TopOffer,
   User,
 } from "./model/index.mjs";
-import fs from "fs";
-import path from "path";
 
 const resolvers = {
   Query: {
@@ -24,16 +22,16 @@ const resolvers = {
       }
       return products;
     },
+    async productsByString(parent, args, contextValue, info) {
+      const searchString = args.searchString;
+      return await Product.find({
+        name: { $regex: searchString, $options: "i" },
+      });
+    },
+    async topOffers(parent, args, contextValue, info) {
+      return TopOffer.find({});
+    },
     async user(parent, args, contextValue, info) {
-      // User.insertMany([
-      //   {
-      //     userName: "yeah sure",
-      //     email: "yeah3977@gmail.com",
-      //     password: "00000000",
-      //     imageUrl: "",
-      //     cart: [],
-      //   },
-      // ]);
       console.log(contextValue);
       const user = contextValue.user;
       return user;

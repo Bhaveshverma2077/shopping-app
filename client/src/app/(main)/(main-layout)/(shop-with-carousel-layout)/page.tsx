@@ -1,7 +1,26 @@
+"use client";
+import ChevronLeftIcon from "@/app/Components/Icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/app/Components/Icons/ChevronRightIcon";
 import TopOffersTile from "@/app/Components/TopOffersTile";
+import { generateImageUrl } from "@/app/utils";
+import { gql, useQuery } from "@apollo/client";
+import { useRef } from "react";
+
+const GET_TOP_OFFERS = gql`
+  query TopOffers {
+    topOffers {
+      title
+      link
+      imageUrl
+    }
+  }
+`;
 
 export default function Page() {
+  const scrollableDivRef = useRef<HTMLDivElement>(null);
+  const { data, loading, error } = useQuery<{
+    topOffers: Array<{ title: string; link: string; imageUrl: string }>;
+  }>(GET_TOP_OFFERS);
   return (
     <>
       <div className="flex items-center justify-between">
@@ -11,19 +30,34 @@ export default function Page() {
           <ChevronRightIcon></ChevronRightIcon>
         </div>
       </div>
-      <div className="flex gap-6 justify-between items-center">
-        <TopOffersTile
-          imageUrl="http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.sanity.io%2Fimages%2Fkud2gmc6%2Fproduction%2F3a85154f4f475cafe885f57586ee92f74c17a680-1200x800.webp&w=1920&q=75"
-          text="Get All new Macbook at Rs. 5999pm"
-        ></TopOffersTile>
-        <TopOffersTile
-          imageUrl="http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.sanity.io%2Fimages%2Fkud2gmc6%2Fproduction%2F3a85154f4f475cafe885f57586ee92f74c17a680-1200x800.webp&w=1920&q=75"
-          text="Get All new Macbook at Rs. 5999pm"
-        ></TopOffersTile>
-        <TopOffersTile
-          imageUrl="http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.sanity.io%2Fimages%2Fkud2gmc6%2Fproduction%2F3a85154f4f475cafe885f57586ee92f74c17a680-1200x800.webp&w=1920&q=75"
-          text="Get All new Macbook at Rs. 5999pm"
-        ></TopOffersTile>
+      <div className="relative">
+        <div
+          onClick={() => {
+            scrollableDivRef.current?.scrollBy({ left: -300 });
+          }}
+          className="absolute p-2 rounded-full flex justify-center items-center bg-black top-[50%] translate-y-[-50%] left-1 z-10"
+        >
+          <ChevronLeftIcon></ChevronLeftIcon>
+        </div>
+        <div
+          onClick={() => {
+            scrollableDivRef.current?.scrollBy({ left: 300 });
+          }}
+          className="absolute p-2 rounded-full flex justify-center items-center bg-black top-[50%] translate-y-[-50%] right-1 z-10"
+        >
+          <ChevronRightIcon></ChevronRightIcon>
+        </div>
+        <div
+          ref={scrollableDivRef}
+          className="scroll-smooth snap-x relative pb-2 flex gap-6 justify-between overflow-x-auto scrollbar-hide items-center"
+        >
+          {data?.topOffers.map((topOfer) => (
+            <TopOffersTile
+              imageUrl={generateImageUrl(topOfer.imageUrl)}
+              text={topOfer.title}
+            ></TopOffersTile>
+          ))}
+        </div>
       </div>
     </>
   );

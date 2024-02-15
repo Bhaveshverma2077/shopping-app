@@ -32,6 +32,12 @@ type OrderItem {
   discountPerUnit: Float
 }
 
+type TopOffer {
+  title: String!
+  link: String!
+  imageUrl: String!
+}
+
 type User {
   email: String!
   userName: String!
@@ -43,9 +49,11 @@ type User {
 type Query {
   products(type: String): [Product!]
   productsByIds(productIds: [String]): [Product!]
+  productsByString(searchString: String!): [Product!]!
   product(id: String!): Product
   carouselItems: [HeroCarouselItem!]
   user: User
+  topOffers: [TopOffer!]!
 }
 
 type Mutation {
