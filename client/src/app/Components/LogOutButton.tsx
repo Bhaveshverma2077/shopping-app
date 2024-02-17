@@ -1,5 +1,5 @@
 import LogOutIcon from "./Icons/LogOutIcon";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 const LogOutButton = () => {
   const path = usePathname();

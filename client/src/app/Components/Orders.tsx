@@ -1,14 +1,14 @@
 import { useQuery } from "@apollo/client";
+
 import { GET_USER } from "../graphql/user";
 import OrderItem from "./OrderItem";
-import { CartItemType, OrderItemType } from "../types";
+import type { CartItemType, OrderItemType } from "../types";
 
 const Orders = () => {
   const {
     data: userData,
     loading: userLoading,
     error: userError,
-    refetch,
   } = useQuery<{
     user: {
       cart: Array<CartItemType>;

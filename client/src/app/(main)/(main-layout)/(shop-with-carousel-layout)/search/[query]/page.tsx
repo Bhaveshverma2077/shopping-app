@@ -22,7 +22,13 @@ export default function Page() {
   const searchString = path.split("/")[path.split("/").length - 1];
 
   const { data, loading, error } = useQuery<{
-    productsByString: Array<Product>;
+    productsByString: Array<{
+      id: string;
+      name: string;
+      imageUrls: Array<string>;
+      price: number;
+      discountPercentage: number;
+    }>;
   }>(GET_PRODUCTS, { variables: { searchString } });
 
   return (
@@ -41,7 +47,7 @@ export default function Page() {
             name={product.name}
             mrp={product.price}
             discount={product.discountPercentage}
-            imgUrl={product.imageUrl}
+            imgUrl={product.imageUrls[0]}
           ></ProductTile>
         ))}
       </div>

@@ -1,6 +1,8 @@
 import Link from "next/link";
+
 import ShoppingCartIcon from "./Icons/ShoppingCartIcon";
 import { generateImageUrl } from "../utils";
+import Image from "next/image";
 
 const ProductTile = (props: {
   id: string;
@@ -11,12 +13,13 @@ const ProductTile = (props: {
 }) => {
   return (
     <div className="w-56">
-      <div className="h-64 w-full overflow-hidden rounded-lg mb-2">
-        <img
-          className="h-full w-full object-cover"
+      <div className="relative h-64 w-full overflow-hidden rounded-lg mb-2">
+        <Image
           src={generateImageUrl(props.imgUrl)}
           alt=""
-        />
+          className="hover:scale-110 hover:transition-transform duration-500 object-cover"
+          fill={true}
+        ></Image>
       </div>
       <div className="flex gap-1 justify-between">
         <div className="border border-zinc-800 rounded-lg text-[0.7rem] px-3 py-2 w-full">

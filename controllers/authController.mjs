@@ -29,17 +29,8 @@ const authController = async (req, res) => {
     );
     return;
   }
-  const userName = req.body.userName.toLowerCase();
-  if (isEmpty(userName)) {
-    res.json(
-      JSON.stringify({
-        error: "Username should not be empty",
-      })
-    );
-    return;
-  }
-  const login = req.body.login;
 
+  const login = req.body.login;
   let user;
   // Login
   if (login) {
@@ -72,6 +63,15 @@ const authController = async (req, res) => {
     return;
   }
   // Sign Up
+  const userName = req.body.userName.toLowerCase();
+  if (isEmpty(userName)) {
+    res.json(
+      JSON.stringify({
+        error: "Username should not be empty",
+      })
+    );
+    return;
+  }
   const newUser = new User({
     userName,
     email,

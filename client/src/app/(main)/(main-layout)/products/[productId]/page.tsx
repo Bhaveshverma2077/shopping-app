@@ -1,69 +1,90 @@
 "use client";
+
+import { useRef, useState } from "react";
+import { useMutation, useQuery } from "@apollo/client";
+import { useParams, useRouter } from "next/navigation";
+
 import ChevronLeftIcon from "@/app/Components/Icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/app/Components/Icons/ChevronRightIcon";
 import ShoppingCartIcon from "@/app/Components/Icons/ShoppingCartIcon";
+import { GET_PRODUCT } from "@/app/graphql/product";
+import { ADD_OR_REMOVE_CART_ITEM } from "@/app/graphql/user";
+import { CartItemType, Product } from "@/app/types";
 import { generateImageUrl } from "@/app/utils";
-import { useMutation, useQuery } from "@apollo/client";
-import gql from "graphql-tag";
-import { useParams } from "next/navigation";
-import { useRef } from "react";
-
-const GET_PRODUCT = gql`
-  query GetProductById($productId: String!) {
-    product(id: $productId) {
-      name
-      companyName
-      description
-      imageUrl
-      price
-      rating
-      discountPercentage
-    }
-  }
-`;
-
-const ADD_CART_ITEM = gql`
-  mutation IncCartItem($productId: String!, $inc: Boolean!) {
-    incOrDecCartItem(productId: $productId, inc: $inc) {
-      quantity
-    }
-  }
-`;
 
 export default function Page() {
+  const router = useRouter();
   const imageRef = useRef<HTMLDivElement>(null);
   const params = useParams<{ productId: string }>();
-  const { data, loading, error } = useQuery<{
-    product: {
-      name: string;
-      description: string;
-      imageUrl: string;
-      price: number;
-      rating: number;
-      companyName: string;
-      discountPercentage: number;
-    };
+
+  const { data, loading } = useQuery<{
+    product: Product;
   }>(GET_PRODUCT, {
     variables: { productId: params.productId },
   });
-  const [incrOrDecProductQuantity] = useMutation(ADD_CART_ITEM, {
+  const [incrOrDecProductQuantity] = useMutation<{
+    incOrDecCartItem: {
+      success: boolean;
+      code: string;
+      message: string;
+      data: CartItemType;
+    };
+  }>(ADD_OR_REMOVE_CART_ITEM, {
     refetchQueries: ["GETUSER"],
   });
+
+  const [selectedImageIndex, updateSelectedImageIndex] = useState<number>(0);
+
+  if (loading)
+    return (
+      <div className="text-zinc-500 py-6 flex justify-center">
+        <p>Loading..."</p>
+      </div>
+    );
+  if (!data?.product)
+    return (
+      <div className="text-zinc-500 py-6 flex justify-center">
+        <p>Product does not exist with the ID specified "{params.productId}"</p>
+      </div>
+    );
+
+  const finalPrice =
+    data?.product.price! -
+    (data?.product.discountPercentage! * data?.product.price!) / 100;
 
   return (
     <div>
       <div className="flex gap-20 pb-6">
         <div className="relative rounded-lg overflow-hidden w-1/2">
-          <img
-            className="object-cover h-[28rem] w-full"
-            src={generateImageUrl(data?.product.imageUrl)}
-            alt=""
-          />
+          {data?.product.imageUrls.map((imageUrl, i) => (
+            <img
+              style={{ left: `${(i - selectedImageIndex) * 100}%` }}
+              className={`transition-[left] absolute left-[${
+                (i - selectedImageIndex) * 100 + "%"
+              }] object-cover h-[28rem] w-full`}
+              src={generateImageUrl(imageUrl)}
+              alt=""
+            />
+          ))}
           <div className="absolute bottom-4 right-4 flex gap-2">
-            <button className="bg-gray-900 border border-gray-800 p-4 rounded-lg">
+            <button
+              onClick={() => {
+                updateSelectedImageIndex(
+                  (index) => (index - 1) % data?.product.imageUrls.length!
+                );
+              }}
+              className="bg-gray-900 border border-gray-800 p-4 rounded-lg"
+            >
               <ChevronLeftIcon></ChevronLeftIcon>
             </button>
-            <button className="bg-gray-900 border border-gray-800 p-4 rounded-lg">
+            <button
+              onClick={() => {
+                updateSelectedImageIndex(
+                  (index) => (index + 1) % data?.product.imageUrls.length!
+                );
+              }}
+              className="bg-gray-900 border border-gray-800 p-4 rounded-lg"
+            >
               <ChevronRightIcon></ChevronRightIcon>
             </button>
           </div>
@@ -71,9 +92,14 @@ export default function Page() {
         <div className="w-1/2">
           <p className="">{data?.product.companyName}</p>
           <p className="text-4xl">{data?.product.name}</p>
-          <p className="pb-10">Rating: {data?.product.rating}</p>
+          <p className="pb-8">Rating: {data?.product.rating}</p>
+          <p className="pb-2 text-zinc-500">
+            {data?.product.variants.join(" | ")}
+          </p>
           <p className="h-40 text-ellipsis overflow-hidden ">
-            {data?.product.description}
+            {data?.product.description.length! > 250
+              ? `${data?.product.description.substring(0, 250)}...`
+              : data?.product.description}
           </p>
           <div className="py-4">
             <div className="flex items-start gap-1">
@@ -82,13 +108,9 @@ export default function Page() {
               </span>
               <span>$</span>
               <span className="text-[2rem] leading-none">
-                {(
-                  data?.product.price! -
-                  (data?.product.discountPercentage! * data?.product.price!) /
-                    100
-                ).toFixed(2)}
+                {Math.floor(finalPrice)}
               </span>
-              <span>99</span>
+              <span>{Math.floor((finalPrice % 1) * 100)}</span>
               <div className="bg-yellow-600 px-4 py-0.5 rounded-md mx-2">
                 {data?.product.discountPercentage}%
               </div>
@@ -96,9 +118,12 @@ export default function Page() {
           </div>
           <button
             onClick={async () => {
-              await incrOrDecProductQuantity({
+              const res = await incrOrDecProductQuantity({
                 variables: { productId: params.productId, inc: true },
               });
+              if (res.data?.incOrDecCartItem.code === "UNAUTHENTICATED") {
+                router.push("/auth");
+              }
             }}
             className="flex gap-2 items-center border border-gray-900 bg-gray-900 py-4 px-8 rounded-lg"
           >
@@ -109,15 +134,18 @@ export default function Page() {
       </div>
       <div
         ref={imageRef}
-        className="flex scroll-smooth scrollbar-hide overflow-x-scroll  snap-x w-1/2  gap-2"
+        className="flex scroll-smooth scrollbar-hide overflow-x-scroll snap-x w-1/2  gap-2"
       >
-        {[0].map((_, i) => (
+        {data?.product.imageUrls.map((imageUrl, i) => (
           <div
-            key={"key"}
-            className="relative rounded-lg snap-center overflow-hidden flex-shrink-0 w-[6rem] h-[6rem] border-white border-2"
+            key={imageUrl}
+            className={`relative rounded-lg snap-center overflow-hidden flex-shrink-0 w-[6rem] h-[6rem] ${
+              selectedImageIndex === i ? "border-white" : "border-black"
+            } border-2`}
           >
             <img
               onClick={() => {
+                updateSelectedImageIndex(i);
                 const firstElementInViewIndex = Math.round(
                   imageRef.current?.scrollLeft! / 95
                 );
@@ -126,7 +154,7 @@ export default function Page() {
                 });
               }}
               className="object-cover h-[6rem] w-[6rem]"
-              src={generateImageUrl(data?.product.imageUrl)}
+              src={generateImageUrl(imageUrl)}
               alt=""
             />
           </div>

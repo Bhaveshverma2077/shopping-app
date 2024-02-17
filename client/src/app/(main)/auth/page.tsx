@@ -1,25 +1,12 @@
 "use client";
-// import ProductTile from "@/app/Components/ProductTile";
-// import { gql, useQuery } from "@apollo/client";
+
+import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import EmailIcon from "@/app/Components/Icons/EmailIcon";
 import LockIcon from "@/app/Components/Icons/LockIcon";
 import UserIcon from "@/app/Components/Icons/UserIcon";
 import Logo from "@/app/Components/Logo";
-import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
-
-// const GET_FASHION_PRODUCTS = gql`
-//   query GetProducts($typeName: String) {
-//     products(type: $typeName) {
-//       id
-//       name
-//       price
-//       imageUrl
-//       discountPercentage
-//     }
-//   }
-// `;
 
 export default function Page() {
   const [isLogin, setIsLogin] = useState<boolean>(true);
@@ -29,17 +16,6 @@ export default function Page() {
   const confirmPasswordFieldRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<null | string>(null);
   const router = useRouter();
-  // const { data, loading, error } = useQuery<{
-  //   products: [
-  //     {
-  //       id: string;
-  //       name: string;
-  //       imageUrl: string;
-  //       price: number;
-  //       discountPercentage: number;
-  //     }
-  //   ];
-  // }>(GET_FASHION_PRODUCTS, { variables: { typeName: "fashion" } });
 
   return (
     <div className="flex items-center justify-center w-full h-[100vh]">
@@ -79,7 +55,7 @@ export default function Page() {
                 return;
               }
               localStorage.setItem("token", token!);
-              router.replace("/");
+              window.location.replace("/");
             });
         }}
         className="bg-zinc-900 flex flex-col gap-4 items-center justify-center rounded-lg p-8 shadow-lg shadow-gray-800"

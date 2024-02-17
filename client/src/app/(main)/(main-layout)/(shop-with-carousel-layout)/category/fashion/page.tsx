@@ -1,36 +1,25 @@
 "use client";
-import ProductTile from "@/app/Components/ProductTile";
-import { gql, useQuery } from "@apollo/client";
 
-const GET_FASHION_PRODUCTS = gql`
-  query GetProducts($typeName: String) {
-    products(type: $typeName) {
-      id
-      name
-      price
-      imageUrl
-      discountPercentage
-    }
-  }
-`;
+import { GET_PRODUCTS } from "@/app/graphql/product";
+import { useQuery } from "@apollo/client";
+
+import ProductTile from "@/app/Components/ProductTile";
 
 export default function Page() {
   const { data, loading, error } = useQuery<{
-    products: [
-      {
-        id: string;
-        name: string;
-        imageUrl: string;
-        price: number;
-        discountPercentage: number;
-      }
-    ];
-  }>(GET_FASHION_PRODUCTS, { variables: { typeName: "fashion" } });
+    products: Array<{
+      id: string;
+      name: string;
+      imageUrls: Array<string>;
+      price: number;
+      discountPercentage: number;
+    }>;
+  }>(GET_PRODUCTS, { variables: { typeName: "fashion" } });
 
   return (
     <>
       <div className="border border-zinc-800 w-full flex items-center justify-center py-6 rounded-lg text-3xl text-zinc-600 font-bold">
-        ELECTRONICS
+        FASHION
       </div>
       {error && <div>Something Went Wrong!</div>}
       {loading && <p>Loading...</p>}
@@ -43,7 +32,7 @@ export default function Page() {
               name={product.name}
               mrp={product.price}
               discount={product.discountPercentage}
-              imgUrl={product.imageUrl}
+              imgUrl={product.imageUrls[0]}
             ></ProductTile>
           ))}
         </div>

@@ -1,29 +1,16 @@
-import { useMutation, useQuery } from "@apollo/client";
-import gql from "graphql-tag";
+import { gql, useMutation, useQuery } from "@apollo/client";
 
-import DeleteIcon from "./Icons/DeleteIcon";
 import { Product } from "../types";
+import { GET_PRODUCT } from "../graphql/product";
+import { ADD_OR_REMOVE_CART_ITEM } from "../graphql/user";
+import DeleteIcon from "./Icons/DeleteIcon";
 import { generateImageUrl } from "../utils";
+import Image from "next/image";
 
-const GET_PRODUCT = gql`
-  query ($productId: String!) {
-    product(id: $productId) {
-      id
-      companyName
-      description
-      name
-      price
-      rating
-      imageUrl
-      discountPercentage
-    }
-  }
-`;
-
-const ADD_OR_REMOVE_CART_ITEM = gql`
-  mutation IncCartItem($productId: String!, $inc: Boolean!) {
-    incOrDecCartItem(productId: $productId, inc: $inc) {
-      quantity
+const REMOVE_CART_ITEM = gql`
+  mutation RemoveCartItem($productId: String!) {
+    removeCartItem(productId: $productId) {
+      code
     }
   }
 `;
@@ -31,11 +18,9 @@ const ADD_OR_REMOVE_CART_ITEM = gql`
 const CartItem = ({
   productId,
   quantity,
-  refetchCart,
 }: {
   productId: string;
   quantity: number;
-  refetchCart: () => any;
 }) => {
   const {
     data: productData,
@@ -49,6 +34,10 @@ const CartItem = ({
     refetchQueries: ["GETUSER"],
   });
 
+  const [removeCartItem] = useMutation(REMOVE_CART_ITEM, {
+    refetchQueries: ["GETUSER"],
+  });
+
   if (error) return <p>Error</p>;
   if (loading) return <p>Skeleton</p>;
 
@@ -57,9 +46,11 @@ const CartItem = ({
   return (
     <div className="border border-zinc-800  h-28 flex gap-4 items-center justify-start px-3 rounded-lg">
       <div className="flex-shrink-0 border border-zinc-800 rounded-lg overflow-hidden">
-        <img
+        <Image
           className="w-20 h-20 object-cover"
-          src={generateImageUrl(product.imageUrl)}
+          height={120}
+          width={120}
+          src={generateImageUrl(product.imageUrls[0])}
           alt=""
         />
       </div>
@@ -67,11 +58,18 @@ const CartItem = ({
         <p className="w-[8.5rem] text-ellipsis overflow-hidden  whitespace-nowrap">
           {product.name}
         </p>
-        <p className="text-gray-600 text-sm pb-2">Pink | 256 GB</p>
+        <p className="text-gray-600 text-sm pb-2">
+          {product.variants.join(" | ")}
+        </p>
         <div className="flex gap-2">
-          <a className="cursor-pointer scale-75">
+          <button
+            onClick={() => {
+              removeCartItem({ variables: { productId } });
+            }}
+            className="cursor-pointer scale-75"
+          >
             <DeleteIcon></DeleteIcon>
-          </a>
+          </button>
           <div className="w-16 flex border border-zinc-800 rounded-sm overflow-hidden">
             <a
               onClick={async () => {
@@ -100,13 +98,7 @@ const CartItem = ({
         </div>
       </div>
       <div className="flex flex-end w-full">
-        <p>
-          $
-          {(
-            product.price -
-            (product.discountPercentage * product.price) / 100
-          ).toFixed(2)}
-        </p>
+        <p>${product.price.toFixed(2)}</p>
       </div>
     </div>
   );

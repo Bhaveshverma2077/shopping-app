@@ -3,16 +3,25 @@ type Product = {
   companyName: string;
   description: string;
   name: string;
+  variants: Array<string>;
   price: number;
   rating: number;
-  imageUrl: string;
+  imageUrls: Array<string>;
   discountPercentage: number;
+};
+
+type User = {
+  userName: string;
+  email: string;
+  cart: Array<CartItemType>;
+  orders: Array<OrderItemType>;
 };
 
 type CartItemType = {
   productId: string;
   quantity: number;
   pricePerUnit: number;
+  discountPerUnit: number;
 };
 
 type OrderItemType = {
@@ -21,4 +30,4 @@ type OrderItemType = {
   finalPriceIncludingTax: number;
 };
 
-export type { Product, CartItemType, OrderItemType };
+export type { Product, CartItemType, OrderItemType, User };

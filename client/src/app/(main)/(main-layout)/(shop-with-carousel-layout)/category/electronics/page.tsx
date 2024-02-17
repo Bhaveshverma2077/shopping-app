@@ -1,31 +1,20 @@
 "use client";
-import ProductTile from "@/app/Components/ProductTile";
-import { gql, useQuery } from "@apollo/client";
 
-const GET_ELECTRONIC_PRODUCTS = gql`
-  query GetProducts($typeName: String) {
-    products(type: $typeName) {
-      id
-      name
-      price
-      imageUrl
-      discountPercentage
-    }
-  }
-`;
+import { useQuery } from "@apollo/client";
+
+import ProductTile from "@/app/Components/ProductTile";
+import { GET_PRODUCTS } from "@/app/graphql/product";
 
 export default function Page() {
   const { data, loading, error } = useQuery<{
-    products: [
-      {
-        id: string;
-        name: string;
-        imageUrl: string;
-        price: number;
-        discountPercentage: number;
-      }
-    ];
-  }>(GET_ELECTRONIC_PRODUCTS, { variables: { typeName: "electronic" } });
+    products: Array<{
+      id: string;
+      name: string;
+      imageUrls: Array<string>;
+      price: number;
+      discountPercentage: number;
+    }>;
+  }>(GET_PRODUCTS, { variables: { typeName: "electronic" } });
 
   return (
     <>
@@ -43,7 +32,7 @@ export default function Page() {
               name={product.name}
               mrp={product.price}
               discount={product.discountPercentage}
-              imgUrl={product.imageUrl}
+              imgUrl={product.imageUrls[0]}
             ></ProductTile>
           ))}
         </div>

@@ -12,7 +12,6 @@ import { readFileSync } from "fs";
 
 import resolvers from "./resolvers.mjs";
 import { User } from "./model/index.mjs";
-
 import authController from "./controllers/authController.mjs";
 
 dotenv.config();
@@ -25,7 +24,6 @@ app.use(
     origin: ["http://localhost:3000"],
     allowedHeaders: ["Authorization", "Content-Type"],
     methods: ["GET", "POST", "OPTIONS"],
-    // credentials: true,
   })
 );
 app.use(express.json());

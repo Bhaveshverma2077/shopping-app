@@ -1,9 +1,9 @@
 "use client";
-import { gql, useQuery } from "@apollo/client";
-import CartItem from "./CartItem";
+
+import { useReducer } from "react";
+
 import BookIcon from "./Icons/BookIcon";
 import Logo from "./Logo";
-import { useReducer } from "react";
 import Cart from "./Cart";
 import ShoppingCartIcon from "./Icons/ShoppingCartIcon";
 import Orders from "./Orders";
@@ -18,6 +18,7 @@ const CartAndOrdersLayout = () => {
     },
     <Cart></Cart>
   );
+
   return (
     <>
       <div className="flex items-center justify-between gap-2 pb-4 ">

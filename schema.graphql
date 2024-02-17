@@ -4,9 +4,10 @@ type Product {
   companyName: String
   type: String!
   price: Float!
-  imageUrl: String!
+  imageUrls: [String!]!
   description: String!
   rating: Float!
+  variants: [String!]!
   discountPercentage: Int!
 }
 
@@ -48,7 +49,6 @@ type User {
 
 type Query {
   products(type: String): [Product!]
-  productsByIds(productIds: [String]): [Product!]
   productsByString(searchString: String!): [Product!]!
   product(id: String!): Product
   carouselItems: [HeroCarouselItem!]
@@ -56,21 +56,37 @@ type Query {
   topOffers: [TopOffer!]!
 }
 
+interface MutationResponse {
+  code: String!
+  success: Boolean!
+  message: String!
+}
+
+type IncOrDecCartItemMutationResponse implements MutationResponse {
+  code: String!
+  success: Boolean!
+  message: String!
+  data: CartItem
+}
+
+type RemoveCartItemMutationResponse implements MutationResponse {
+  code: String!
+  success: Boolean!
+  message: String!
+}
+
+type PlaceOrderItemMutationResponse implements MutationResponse {
+  code: String!
+  success: Boolean!
+  message: String!
+  order: OrderItem
+}
+
 type Mutation {
-  incOrDecCartItem(productId: String, inc: Boolean): CartItem
-  removeCartItem(productId: String): CartItem
-  placeOrder: OrderItem!
-}
-
-"""
-for multi line doc string
-"""
-input BlogPostContent {
-  title: String
-}
-
-enum AllowedColors {
-  RED
-  Green
-  Blue
+  incOrDecCartItem(
+    productId: String!
+    inc: Boolean!
+  ): IncOrDecCartItemMutationResponse!
+  removeCartItem(productId: String): RemoveCartItemMutationResponse!
+  placeOrder: PlaceOrderItemMutationResponse
 }

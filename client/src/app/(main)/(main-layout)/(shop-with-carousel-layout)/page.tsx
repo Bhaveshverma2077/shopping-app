@@ -1,10 +1,13 @@
 "use client";
+
+import { useRef } from "react";
+import { gql, useQuery } from "@apollo/client";
+
 import ChevronLeftIcon from "@/app/Components/Icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/app/Components/Icons/ChevronRightIcon";
 import TopOffersTile from "@/app/Components/TopOffersTile";
 import { generateImageUrl } from "@/app/utils";
-import { gql, useQuery } from "@apollo/client";
-import { useRef } from "react";
+import Link from "next/link";
 
 const GET_TOP_OFFERS = gql`
   query TopOffers {
@@ -18,15 +21,19 @@ const GET_TOP_OFFERS = gql`
 
 export default function Page() {
   const scrollableDivRef = useRef<HTMLDivElement>(null);
+
   const { data, loading, error } = useQuery<{
     topOffers: Array<{ title: string; link: string; imageUrl: string }>;
   }>(GET_TOP_OFFERS);
+
   return (
     <>
       <div className="flex items-center justify-between">
         <p>Top Offers just for You</p>
         <div className="flex items-center">
-          <p>View more</p>
+          <Link href="/category/electronics">
+            <p>View more</p>
+          </Link>
           <ChevronRightIcon></ChevronRightIcon>
         </div>
       </div>
@@ -49,10 +56,12 @@ export default function Page() {
         </div>
         <div
           ref={scrollableDivRef}
-          className="scroll-smooth snap-x relative pb-2 flex gap-6 justify-between overflow-x-auto scrollbar-hide items-center"
+          className="rounded-lg scroll-smooth snap-x relative pb-2 flex gap-6 justify-between overflow-x-auto scrollbar-hide items-center"
         >
           {data?.topOffers.map((topOfer) => (
             <TopOffersTile
+              key={topOfer.title}
+              link={topOfer.link}
               imageUrl={generateImageUrl(topOfer.imageUrl)}
               text={topOfer.title}
             ></TopOffersTile>

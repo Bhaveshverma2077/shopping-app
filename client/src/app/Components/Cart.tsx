@@ -1,75 +1,30 @@
 "use client";
+
 import { gql, useMutation, useQuery } from "@apollo/client";
+
 import CartItem from "./CartItem";
 import { GET_USER } from "../graphql/user";
-
-// const GET_PRODUCTS_BY_IDS = gql`
-//   query ($productIds: [String!]!) {
-//     productsByIds(productIds: $productIds) {
-//       id
-//       companyName
-//       description
-//       name
-//       price
-//       rating
-//       imageUrl
-//       discountPercentage
-//     }
-//   }
-// `;
+import type { User } from "../types";
 
 const Cart = () => {
-  const {
-    data: userData,
-    loading: userLoading,
-    error: userError,
-    refetch,
-  } = useQuery<{
-    user: {
-      cart: Array<{
-        productId: string;
-        quantity: number;
-        pricePerUnit: number;
-        discountPerUnit: number;
-      }>;
-    };
+  const { data: userData } = useQuery<{
+    user: User;
   }>(GET_USER);
-  // const {
-  //   data: cartData,
-  //   loading,
-  //   error,
-  // } = useQuery<{
-  //   productsByIds: Array<{
-  //     id: string;
-  //     companyName: string;
-  //     description: string;
-  //     name: string;
-  //     price: number;
-  //     rating: number;
-  //     imageUrl: string;
-  //     discountPercentage: number;
-  //   }>;
-  // }>(GET_PRODUCTS_BY_IDS, {
-  //   variables: {
-  //     productIds: userData?.user.cart.map((cartItem) => cartItem.productId),
-  //   },
-  //   skip: userLoading,
-  // });
 
   const PLACE_ORDER = gql`
     mutation PlaceOrder {
       placeOrder {
-        id
+        code
       }
     }
   `;
 
-  const [placeOrder, { data }] = useMutation(PLACE_ORDER, {
+  const [placeOrder] = useMutation(PLACE_ORDER, {
     refetchQueries: ["GETUSER"],
   });
 
+  // if not logged in
   if (!userData?.user || userData.user.cart.length === 0) {
-    // if not logged in
     return (
       <div className="border border-zinc-800  h-28 flex gap-4 items-center justify-center px-3 rounded-lg">
         <p className="text-zinc-600">Cart is empty!</p>
@@ -94,11 +49,7 @@ const Cart = () => {
     <>
       <div className="max-h-[50rem] customized-scrollbar overflow-hidden overflow-y-auto">
         {userData.user.cart.map((cartItem) => (
-          <CartItem
-            key={cartItem.productId}
-            refetchCart={refetch}
-            {...cartItem}
-          ></CartItem>
+          <CartItem key={cartItem.productId} {...cartItem}></CartItem>
         ))}
       </div>
       {subTotal !== 0 && (
@@ -117,8 +68,8 @@ const Cart = () => {
             <p>+ ${((priceIncludingDiscount * taxPercent) / 100).toFixed(2)}</p>
           </div>
           <div className="text-[0.7rem] text-zinc-500 flex justify-between">
-            <p className="">Discount</p>
-            <p>- ${totalDiscount}</p>
+            <p className="">Total Discount</p>
+            <p>- ${totalDiscount.toFixed(2)}</p>
           </div>
           <br />
           <div className="px-2">

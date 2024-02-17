@@ -8,7 +8,6 @@ import { gql, useQuery } from "@apollo/client";
 import DropDownTile from "./DropDownTile";
 import ChevronDownIcon from "./Icons/ChevronDownIcon";
 import SearchIcon from "./Icons/SearchIcon";
-import SunIcon from "./Icons/SunIcon";
 import TrendingIcon from "./Icons/TrendingIcon";
 import UserIcon from "./Icons/UserIcon";
 import LogOutButton from "./LogOutButton";
@@ -28,9 +27,7 @@ const Nav = () => {
   const path = usePathname();
   const router = useRouter();
 
-  const { data, loading, error } = useQuery<{ user: { userName: string } }>(
-    GET_USERNAME
-  );
+  const { data } = useQuery<{ user: { userName: string } }>(GET_USERNAME);
 
   const dropDownValue =
     path.split("/")[1] === "category" &&
@@ -105,11 +102,6 @@ const Nav = () => {
           <SearchIcon></SearchIcon>
         </div>
       </form>
-      {/* <div className="border border-zinc-900 fl p-1 rounded-lg">
-        <div className="scale-[0.6]">
-          <SunIcon></SunIcon>
-        </div>
-      </div> */}
       {isLoggedIn ? (
         <div className="relative border gap-2 group border-zinc-900 flex items-center justify-center p-2 rounded-lg">
           <div className="z-20 absolute h-5 w-40 top-10 right-0"></div>

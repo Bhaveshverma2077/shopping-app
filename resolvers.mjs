@@ -9,9 +9,6 @@ import {
 const resolvers = {
   Query: {
     async products(parent, args, contextValue, info) {
-      // const x = Product.insertMany(
-      //   JSON.parse(fs.readFileSync(path.join(process.cwd(), "products.json")))
-      // );
       let products;
       if (args.type === "electronic") {
         products = await Product.find({ type: "electronic" });
@@ -32,25 +29,18 @@ const resolvers = {
       return TopOffer.find({});
     },
     async user(parent, args, contextValue, info) {
-      console.log(contextValue);
       const user = contextValue.user;
       return user;
     },
     async product(parent, args, contextValue, info) {
-      // const x = Product.insertMany(
-      //   JSON.parse(fs.readFileSync(path.join(process.cwd(), "products.json")))
-      // );
-      const product = await Product.findOne({ _id: args.id });
-      return product;
+      try {
+        return await Product.findOne({ _id: args.id });
+      } catch (err) {
+        if (err.message.startsWith("Cast to ObjectId failed")) {
+          return undefined;
+        }
+      }
     },
-    async productsByIds(parent, args, contextValue, info) {
-      const productIds = args.productIds;
-      const products = await Promise.all(
-        productIds.map((id) => Product.findOne({ _id: id }))
-      );
-      return products;
-    },
-
     async carouselItems(parent, args, contextValue, info) {
       const carouselItems = await CarouselItem.find({});
       return carouselItems;
@@ -59,13 +49,18 @@ const resolvers = {
   Mutation: {
     async incOrDecCartItem(parent, args, contextValue, info) {
       const user = contextValue.user;
-      console.log(user);
+      if (!user) {
+        return {
+          success: false,
+          code: "UNAUTHENTICATED",
+          message: "login is required to perform this action!",
+        };
+      }
       const cart = contextValue.user.cart;
       const productId = args.productId;
       const inc = args.inc;
       const cartItem = cart.find((item) => item.productId === productId);
       const cartItemQuatity = cartItem?.quantity;
-      console.log(cartItemQuatity);
       if (cartItem) {
         // inc quantity
         if (cartItemQuatity === 1 && !inc) {
@@ -80,13 +75,29 @@ const resolvers = {
             { $inc: { "cart.$.quantity": inc ? 1 : -1 } }
           );
         }
-        return (await User.findOne({ email: user.email })).cart.find(
-          (item) => item.productId === productId
-        );
+        return {
+          success: true,
+          code: "SUCCESS",
+          message: "operation successful",
+          data: (await User.findOne({ email: user.email })).cart.find(
+            (item) => item.productId === productId
+          ),
+        };
       }
       // push with quantity=1
       if (inc) {
-        const product = await Product.findOne({ _id: productId });
+        let product;
+        try {
+          product = await Product.findOne({ _id: productId });
+        } catch (err) {
+          if (err.message.startsWith("Cast to ObjectId failed")) {
+            return {
+              success: false,
+              code: "INVALID_INPUT",
+              message: `No product exists with the specified ID ${productId}`,
+            };
+          }
+        }
         await User.updateOne(
           { email: user.email },
           {
@@ -102,13 +113,25 @@ const resolvers = {
           }
         );
       }
-      return (await User.findOne({ email: user.email })).cart.find(
-        (item) => item.productId === productId
-      );
+      return {
+        success: true,
+        code: "SUCCESS",
+        message: "operation successful",
+        data: (await User.findOne({ email: user.email })).cart.find(
+          (item) => item.productId === productId
+        ),
+      };
     },
     async placeOrder(parent, args, contextValue, info) {
       const taxPercent = 5;
       const user = contextValue.user;
+      if (!user) {
+        return {
+          success: false,
+          code: "UNAUTHENTICATED",
+          message: "login is required to perform this action!",
+        };
+      }
       const priceIncludingDiscount = user.cart.reduce(
         (acc, value) =>
           acc + (value.pricePerUnit - value.discountPerUnit) * value.quantity,
@@ -130,13 +153,33 @@ const resolvers = {
       );
 
       const userWithUpdatedOrder = await User.findOne({ email: user.email });
-      return userWithUpdatedOrder.orders[
-        userWithUpdatedOrder.orders.length - 1
-      ];
+      return {
+        success: true,
+        code: "SUCCESS",
+        message: "Operation Successful",
+        order:
+          userWithUpdatedOrder.orders[userWithUpdatedOrder.orders.length - 1],
+      };
     },
-    async deleteCartItem(parent, args, contextValue, info) {
-      const products = await Product.find({ _id: args.id });
-      return products[0];
+    async removeCartItem(parent, args, contextValue, info) {
+      const user = contextValue.user;
+      if (!user) {
+        return {
+          success: false,
+          code: "UNAUTHENTICATED",
+          message: "login is required to perform this action!",
+        };
+      }
+      const productId = args.productId;
+      await User.updateOne(
+        { email: user.email },
+        { $pull: { cart: { productId } } }
+      );
+      return {
+        success: true,
+        code: "SUCCESS",
+        message: "operation successful",
+      };
     },
   },
 };
