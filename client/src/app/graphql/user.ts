@@ -23,7 +23,7 @@ const GET_USER = gql`
   }
 `;
 
-const ADD_OR_REMOVE_CART_ITEM = gql`
+const INC_OR_DEC_CART_ITEM = gql`
   mutation IncOrDecCartItem($productId: String!, $inc: Boolean!) {
     incOrDecCartItem(productId: $productId, inc: $inc) {
       code
@@ -31,4 +31,4 @@ const ADD_OR_REMOVE_CART_ITEM = gql`
   }
 `;
 
-export { GET_USER, ADD_OR_REMOVE_CART_ITEM };
+export { GET_USER, INC_OR_DEC_CART_ITEM };

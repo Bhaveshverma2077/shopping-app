@@ -8,7 +8,7 @@ import ChevronLeftIcon from "@/app/Components/Icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/app/Components/Icons/ChevronRightIcon";
 import ShoppingCartIcon from "@/app/Components/Icons/ShoppingCartIcon";
 import { GET_PRODUCT } from "@/app/graphql/product";
-import { ADD_OR_REMOVE_CART_ITEM } from "@/app/graphql/user";
+import { INC_OR_DEC_CART_ITEM } from "@/app/graphql/user";
 import { CartItemType, Product } from "@/app/types";
 import { generateImageUrl } from "@/app/utils";
 
@@ -29,7 +29,7 @@ export default function Page() {
       message: string;
       data: CartItemType;
     };
-  }>(ADD_OR_REMOVE_CART_ITEM, {
+  }>(INC_OR_DEC_CART_ITEM, {
     refetchQueries: ["GETUSER"],
   });
 

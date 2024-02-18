@@ -1,11 +1,11 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
+import Image from "next/image";
 
 import { Product } from "../types";
 import { GET_PRODUCT } from "../graphql/product";
-import { ADD_OR_REMOVE_CART_ITEM } from "../graphql/user";
+import { INC_OR_DEC_CART_ITEM } from "../graphql/user";
 import DeleteIcon from "./Icons/DeleteIcon";
 import { generateImageUrl } from "../utils";
-import Image from "next/image";
 
 const REMOVE_CART_ITEM = gql`
   mutation RemoveCartItem($productId: String!) {
@@ -30,7 +30,7 @@ const CartItem = ({
     product: Product;
   }>(GET_PRODUCT, { variables: { productId } });
 
-  const [incOrDecProductQuantity] = useMutation(ADD_OR_REMOVE_CART_ITEM, {
+  const [incOrDecProductQuantity] = useMutation(INC_OR_DEC_CART_ITEM, {
     refetchQueries: ["GETUSER"],
   });
 
