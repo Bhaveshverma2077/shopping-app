@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 
 import EmailIcon from "@/app/Components/Icons/EmailIcon";
 import LockIcon from "@/app/Components/Icons/LockIcon";
@@ -15,7 +14,6 @@ export default function Page() {
   const passwordFieldRef = useRef<HTMLInputElement>(null);
   const confirmPasswordFieldRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<null | string>(null);
-  const router = useRouter();
 
   return (
     <div className="flex items-center justify-center w-full h-[100vh]">
