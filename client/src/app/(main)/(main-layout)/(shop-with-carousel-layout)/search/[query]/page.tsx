@@ -1,7 +1,5 @@
 "use client";
 import ProductTile from "@/app/Components/ProductTile";
-import { Product } from "@/app/types";
-import { generateImageUrl } from "@/app/utils";
 import { gql, useQuery } from "@apollo/client";
 import { usePathname } from "next/navigation";
 
