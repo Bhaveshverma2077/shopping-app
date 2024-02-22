@@ -139,7 +139,11 @@ const resolvers = {
       );
       const finalPriceIncludingTax =
         priceIncludingDiscount + (priceIncludingDiscount * taxPercent) / 100;
-      const orderData = { products: user.cart, finalPriceIncludingTax };
+      const orderData = {
+        products: user.cart,
+        finalPriceIncludingTax,
+        purchaseDateAndTime: Date.now(),
+      };
       const order = new Order(orderData);
 
       await User.findOneAndUpdate(

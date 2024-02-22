@@ -29,6 +29,7 @@ const cartItemSchema = new mongoose.Schema({
 
 const orderItemSchema = new mongoose.Schema({
   products: [cartItemSchema],
+  purchaseDateAndTime: String,
   finalPriceIncludingTax: Number,
 });
 
