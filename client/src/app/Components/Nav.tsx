@@ -1,18 +1,17 @@
 "use client";
 
-import { useRef } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
 import { gql, useQuery } from "@apollo/client";
 
+import UserDropdown from "./UserDropdown";
+import HamburgerButton from "./HambugerButtton";
+import Dropdown from "./Dropdown";
+import SearchInput from "./SearchInput";
+import LoginButton from "./LoginButton";
 import DropDownTile from "./DropDownTile";
-import ChevronDownIcon from "./Icons/ChevronDownIcon";
-import SearchIcon from "./Icons/SearchIcon";
-import TrendingIcon from "./Icons/TrendingIcon";
-import UserIcon from "./Icons/UserIcon";
 import LogOutButton from "./LogOutButton";
-
-const availableDropdownValue = ["electronics", "fashion"];
+import TrendingIcon from "./Icons/TrendingIcon";
+import HamburgerDropdown from "./HamburgerDropdown";
 
 const GET_USERNAME = gql`
   query Username {
@@ -22,113 +21,43 @@ const GET_USERNAME = gql`
   }
 `;
 
-const Nav = () => {
-  const searchRef = useRef<HTMLInputElement>(null);
-  const path = usePathname();
-  const router = useRouter();
-
+const Nav = ({
+  onShopOrCartClicked,
+  showShopOrCartButton,
+}: {
+  showShopOrCartButton: "shop" | "cart";
+  onShopOrCartClicked: (shopOrCart: "shop" | "cart") => void;
+}) => {
   const { data } = useQuery<{ user: { userName: string } }>(GET_USERNAME);
 
-  const dropDownValue =
-    path.split("/")[1] === "category" &&
-    availableDropdownValue.includes(path.split("/")[2])
-      ? path.split("/")[2]
-      : path === "/"
-      ? "trending"
-      : null;
   const isLoggedIn = !!data?.user;
-
   return (
-    <nav className="flex gap-2 items-center">
-      <div className="relative border border-zinc-900 flex group items-center gap-1 justify-center px-4 py-2 rounded-lg">
-        <div className="scale-75">
-          {dropDownValue == "trending" ? (
-            <TrendingIcon></TrendingIcon>
-          ) : dropDownValue === "electronics" ? (
-            <img className="w-6 h-6" src="/electronics.webp" alt="" />
-          ) : dropDownValue === "fashion" ? (
-            <img className="w-6 h-6" src="/fashion.webp" alt="" />
+    <>
+      <nav className="flex gap-2 items-center">
+        <div className="lg:block hidden">
+          <Dropdown></Dropdown>
+        </div>
+        <SearchInput></SearchInput>
+        <div className="lg:block hidden">
+          {isLoggedIn ? (
+            <UserDropdown userName={data?.user?.userName}></UserDropdown>
           ) : (
-            <div></div>
+            <LoginButton></LoginButton>
           )}
         </div>
-        <p className="text-[0.8rem]">
-          {dropDownValue === null
-            ? ""
-            : `${dropDownValue[0].toUpperCase()}${dropDownValue.slice(1)}`}
-        </p>
-        <ChevronDownIcon></ChevronDownIcon>
-        <div className="z-20 absolute h-5 w-40 top-10 right-0"></div>
-        <div className="z-20 hidden absolute -bottom-24 right-0 rounded-lg bg-zinc-900 w-40 p-2 group-hover:flex flex-col gap-1">
-          {dropDownValue !== "electronics" && (
-            <DropDownTile
-              icon={<img className="w-6 h-6" src="/electronics.webp" alt="" />}
-              title="Electronics"
-              href="/category/electronics"
-            ></DropDownTile>
-          )}
-          {dropDownValue !== "fashion" && (
-            <DropDownTile
-              icon={<img className="w-6 h-6" src="/fashion.webp" alt="" />}
-              title="Fashion"
-              href="/category/fashion"
-            ></DropDownTile>
-          )}
-          {dropDownValue !== "trending" && (
-            <DropDownTile
-              icon={<TrendingIcon></TrendingIcon>}
-              title="Trending"
-              href="/"
-            ></DropDownTile>
-          )}
-        </div>
-      </div>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          if (searchRef.current?.value) {
-            router.push(`/search/${searchRef.current?.value}`);
-          }
-        }}
-        className="relative"
-      >
-        <input
-          ref={searchRef}
-          placeholder="Search"
-          className="focus:bg-zinc-900 outline-none pl-9 placeholder:text-[0.8rem] bg-zinc-950 border border-zinc-900 px-2 py-[0.3rem] w-36 rounded-lg"
-          type="text"
-        />
-        <div className="absolute left-3 bottom-1 scale-[0.7]">
-          <SearchIcon></SearchIcon>
-        </div>
-      </form>
-      {isLoggedIn ? (
-        <div className="relative border gap-2 group border-zinc-900 flex items-center justify-center p-2 rounded-lg">
-          <div className="z-20 absolute h-5 w-40 top-10 right-0"></div>
-          <img
-            src="http://localhost:3000/_next/image?url=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F119785304%3Fv%3D4&w=16&q=75"
-            alt=""
-          />
-          <div className="scale-75">
-            <UserIcon></UserIcon>
-          </div>
-          <p className="text-[0.8rem]">{data?.user?.userName}</p>
-
-          <ChevronDownIcon></ChevronDownIcon>
-          <div className="z-20 hidden absolute -bottom-16 right-0 rounded-lg bg-zinc-900 w-28 p-2 group-hover:flex flex-col gap-1">
-            <LogOutButton></LogOutButton>
+        <div className="lg:hidden m-1 relative border border-zinc-900 flex group items-center gap-1 justify-center rounded-lg">
+          <HamburgerButton></HamburgerButton>
+          <div className="z-20 absolute h-6 w-40 top-8 right-0"></div>
+          <div className="z-20 hidden absolute -bottom-44 right-0 rounded-lg bg-zinc-900 w-40 p-2 group-hover:flex flex-col gap-1">
+            <HamburgerDropdown
+              onShopOrCartClicked={onShopOrCartClicked}
+              showShopOrCartButton={showShopOrCartButton}
+              userName={data?.user.userName}
+            ></HamburgerDropdown>
           </div>
         </div>
-      ) : (
-        <Link
-          href={"/auth"}
-          className="relative border gap-2 group border-zinc-900 flex items-center justify-center p-2 rounded-lg"
-        >
-          <div className="z-20 absolute h-5 w-40 top-10 right-0"></div>
-          <p className="text-[0.8rem]">Log In</p>
-        </Link>
-      )}
-    </nav>
+      </nav>
+    </>
   );
 };
 
