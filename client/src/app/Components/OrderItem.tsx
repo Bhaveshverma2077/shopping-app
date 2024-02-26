@@ -22,8 +22,7 @@ const OrderItem = ({
   price: number;
   products: Array<CartItemType>;
 }) => {
-  const dateString = dateToLocaleString(new Date(Date.now()));
-
+  let dateString = dateToLocaleString(date);
   return (
     <div className="border border-zinc-800 flex  flex-col items-center justify-start p-3 rounded-lg">
       <div className="mb-4 flex flex-col justify-between p-1 w-full">

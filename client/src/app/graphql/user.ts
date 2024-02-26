@@ -17,6 +17,7 @@ const GET_USER = gql`
           pricePerUnit
           quantity
         }
+        purchaseDateAndTime
         finalPriceIncludingTax
       }
     }
