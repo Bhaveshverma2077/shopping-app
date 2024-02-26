@@ -51,17 +51,17 @@ const CartItem = ({
           height={120}
           width={120}
           src={generateImageUrl(product.imageUrls[0])}
-          alt=""
+          alt={`${product.name} image`}
         />
       </div>
-      <div className="flex-shrink-0 w-[8.5rem]">
+      <div className="flex-shrink-0 w-[6rem]">
         <p className="w-[8.5rem] text-ellipsis overflow-hidden  whitespace-nowrap">
           {product.name}
         </p>
         <p className="text-gray-600 text-sm pb-2">
           {product.variants.join(" | ")}
         </p>
-        <div className="flex gap-2">
+        <div className="pb-1 flex gap-2">
           <button
             onClick={() => {
               removeCartItem({ variables: { productId } });
@@ -96,9 +96,12 @@ const CartItem = ({
             </a>
           </div>
         </div>
+        <div className="xl:hidden flex flex-end w-full">
+          <p className="">${product.price.toFixed(2)}</p>
+        </div>
       </div>
-      <div className="flex flex-end w-full">
-        <p>${product.price.toFixed(2)}</p>
+      <div className="xl:flex hidden flex-end w-full">
+        <p className="ml-auto">${product.price.toFixed(2)}</p>
       </div>
     </div>
   );
