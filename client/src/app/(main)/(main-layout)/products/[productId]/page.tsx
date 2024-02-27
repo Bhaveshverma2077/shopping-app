@@ -54,14 +54,14 @@ export default function Page() {
 
   return (
     <div>
-      <div className="flex gap-20 pb-6">
-        <div className="relative rounded-lg overflow-hidden w-1/2">
+      <div className="flex  flex-col md:flex-row  gap-20 pb-6">
+        <div className="relative md:h-[28rem] h-[35rem] rounded-lg overflow-hidden   md:w-1/2">
           {data?.product.imageUrls.map((imageUrl, i) => (
             <img
               style={{ left: `${(i - selectedImageIndex) * 100}%` }}
               className={`transition-[left] absolute left-[${
                 (i - selectedImageIndex) * 100 + "%"
-              }] object-cover h-[28rem] w-full`}
+              }] object-cover md:h-[28rem] h-[35rem] w-full`}
               src={generateImageUrl(imageUrl)}
               alt=""
             />
@@ -89,7 +89,7 @@ export default function Page() {
             </button>
           </div>
         </div>
-        <div className="w-1/2">
+        <div className="md:w-1/2">
           <p className="">{data?.product.companyName}</p>
           <p className="text-4xl">{data?.product.name}</p>
           <p className="pb-8">Rating: {data?.product.rating}</p>

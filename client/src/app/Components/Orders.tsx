@@ -31,6 +31,7 @@ const Orders = () => {
     <div className="max-h-[50rem] customized-scrollbar overflow-hidden overflow-y-auto">
       {orders.map((orderItemData) => (
         <OrderItem
+          key={orderItemData.id}
           orderId={orderItemData.id}
           products={orderItemData.products}
           date={new Date()}
