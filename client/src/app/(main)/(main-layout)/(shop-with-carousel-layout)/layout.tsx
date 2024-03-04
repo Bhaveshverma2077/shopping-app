@@ -69,12 +69,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             ref={scrollDivRef}
             className="absolute scrollbar-hide scroll-smooth snap-x overflow-x-scroll flex top-0 left-0"
           >
-            {data?.carouselItems.map((carouselItem) => (
+            {data?.carouselItems.map((carouselItem, i) => (
               <Image
                 key={carouselItem.id}
                 width={imageContainerRef.current?.clientWidth ?? 0}
                 height={256}
-                alt=""
+                alt={`carousel image ${i + 1}`}
                 className="object-cover h-64 object-center flex-shrink-0 snap-center"
                 src={generateImageUrl(carouselItem.imageUrl)}
               ></Image>
