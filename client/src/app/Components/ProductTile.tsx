@@ -16,9 +16,10 @@ const ProductTile = (props: {
       <div className="relative h-64 w-full overflow-hidden rounded-lg mb-2">
         <Image
           src={generateImageUrl(props.imgUrl)}
-          alt=""
+          alt={`${props.name} image`}
           className="hover:scale-110 hover:transition-transform duration-500 object-cover"
           fill={true}
+          // sizes="(max-width: 600px) 80vw,(max-width: 600px)"
         ></Image>
       </div>
       <div className="flex gap-1 justify-between">

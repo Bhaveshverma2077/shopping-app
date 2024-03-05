@@ -9,7 +9,7 @@ const TopOffersTile = (props: {
   return (
     <Link
       href={props.link}
-      className="snap-center relative w-1/3  h-64 flex-shrink-0"
+      className="snap-center relative w-1/3 min-w-64  h-64 flex-shrink-0"
     >
       <div className="overflow-hidden h-full w-full rounded-lg">
         <Image
