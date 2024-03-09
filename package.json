@@ -1,15 +1,16 @@
 {
   "name": "shopping-app",
   "version": "1.0.0",
-  "description": "",
+  "author": "bhaveshverma2077",
+  "description": "This is a full-stack web shopping application built using React, Next.js, Tailwind CSS, TypeScript, Node.js, JavaScript, GraphQL, Apollo Server, Apollo Client, and MongoDB.",
   "main": "index.js",
   "scripts": {
     "client": "cd client && npm run dev",
     "server": "node server.mjs",
+    "get-dependencies": "npm install && cd client && npm install",
     "dev": "concurrently -c \"#FF407D,#387ADF\" \"npm run server\" \"npm run client\""
   },
   "keywords": [],
-  "author": "",
   "license": "ISC",
   "dependencies": {
     "@apollo/server": "^4.10.0",
