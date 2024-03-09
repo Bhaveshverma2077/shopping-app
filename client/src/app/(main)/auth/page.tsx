@@ -29,7 +29,7 @@ export default function Page() {
             setError("Passwords do not match");
             return;
           }
-          fetch("http://localhost:5050/auth", {
+          fetch("https://1f24-103-92-43-247.ngrok-free.app/auth", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -54,9 +54,12 @@ export default function Page() {
               }
               localStorage.setItem("token", token!);
               window.location.replace("/");
+            })
+            .catch((_) => {
+              setError("Something went wrong!");
             });
         }}
-        className="bg-zinc-900 flex flex-col gap-4 items-center justify-center rounded-lg p-8 shadow-lg shadow-gray-800"
+        className="bg-zinc-900 flex flex-col gap-4 items-center justify-center rounded-lg p-4 sm:p-8 shadow-lg shadow-gray-800"
       >
         <Logo></Logo>
         <p className="text-[2rem]">Welcome back</p>
