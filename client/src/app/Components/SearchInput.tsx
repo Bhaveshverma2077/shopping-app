@@ -18,7 +18,7 @@ const SearchInput = () => {
       <input
         ref={searchRef}
         placeholder="Search"
-        className="focus:bg-zinc-900 outline-none pl-9 placeholder:text-[0.8rem] bg-zinc-950 border border-zinc-900 px-2 py-[0.3rem] w-36 rounded-lg"
+        className="focus:bg-zinc-900 text-[0.8rem] outline-none pl-9 placeholder:text-[0.8rem] bg-zinc-950 border border-zinc-900 px-2 py-[0.3rem] w-36 rounded-lg"
         type="text"
       />
       <div className="absolute left-3 bottom-1 scale-[0.7]">

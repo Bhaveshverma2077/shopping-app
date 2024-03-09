@@ -30,7 +30,10 @@ const OrderItem = ({
         <p>{orderId}</p>
       </div>
       {products.map((product) => (
-        <div className="flex justify-between p-1 w-full">
+        <div
+          key={product.productId}
+          className="flex justify-between p-1 w-full"
+        >
           <p className="text-zinc-600 text-[0.7rem]">{product.productId}</p>
           <p className="text-zinc-600 text-[0.7rem]">x{product.quantity}</p>
         </div>
