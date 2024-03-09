@@ -8,7 +8,7 @@ import Cart from "./Cart";
 import ShoppingCartIcon from "./Icons/ShoppingCartIcon";
 import Orders from "./Orders";
 
-const CartAndOrdersLayout = () => {
+const CartAndOrdersLayout = (hideLogo: { hideLogo?: boolean }) => {
   const [cartOrOrders, changeCartOrOrders] = useReducer(
     (state: React.ReactNode, action: { type: "cart" | "orders" }) => {
       if (action.type === "cart") {
@@ -22,7 +22,7 @@ const CartAndOrdersLayout = () => {
   return (
     <>
       <div className="flex items-center justify-between gap-2 pb-4 ">
-        <Logo></Logo>
+        {!hideLogo && <Logo></Logo>}
         <div className="flex gap-2">
           <div
             onClick={() => {

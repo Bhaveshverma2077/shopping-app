@@ -12,23 +12,6 @@ const authController = async (req, res) => {
     return;
   }
   const password = req.body.password;
-  if (
-    !isStrongPassword(password, {
-      minLength: 8,
-      minLowercase: 1,
-      minUppercase: 1,
-      minSymbols: 1,
-      minNumbers: 1,
-    })
-  ) {
-    res.json(
-      JSON.stringify({
-        error:
-          "Password Should be at least 8 characters including one number, one uppercase alphabet, one lowercase alphabet and one symbol!",
-      })
-    );
-    return;
-  }
 
   const login = req.body.login;
   let user;
@@ -68,6 +51,23 @@ const authController = async (req, res) => {
     res.json(
       JSON.stringify({
         error: "Username should not be empty",
+      })
+    );
+    return;
+  }
+  if (
+    !isStrongPassword(password, {
+      minLength: 8,
+      minLowercase: 1,
+      minUppercase: 1,
+      minSymbols: 1,
+      minNumbers: 1,
+    })
+  ) {
+    res.json(
+      JSON.stringify({
+        error:
+          "Password Should be at least 8 characters including one number, one uppercase alphabet, one lowercase alphabet and one symbol!",
       })
     );
     return;

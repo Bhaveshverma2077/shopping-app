@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { gql, useQuery } from "@apollo/client";
 
 import UserDropdown from "./UserDropdown";
@@ -8,9 +7,6 @@ import HamburgerButton from "./HambugerButtton";
 import Dropdown from "./Dropdown";
 import SearchInput from "./SearchInput";
 import LoginButton from "./LoginButton";
-import DropDownTile from "./DropDownTile";
-import LogOutButton from "./LogOutButton";
-import TrendingIcon from "./Icons/TrendingIcon";
 import HamburgerDropdown from "./HamburgerDropdown";
 
 const GET_USERNAME = gql`
@@ -52,7 +48,7 @@ const Nav = ({
             <HamburgerDropdown
               onShopOrCartClicked={onShopOrCartClicked}
               showShopOrCartButton={showShopOrCartButton}
-              userName={data?.user.userName}
+              userName={data?.user?.userName}
             ></HamburgerDropdown>
           </div>
         </div>

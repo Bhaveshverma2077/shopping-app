@@ -10,7 +10,7 @@ const GET_PRODUCTS = gql`
       name
       price
       discountPercentage
-      imageUrl
+      imageUrls
     }
   }
 `;
@@ -31,7 +31,7 @@ export default function Page() {
 
   return (
     <>
-      <div className="border border-zinc-800 w-full flex items-center justify-center py-6 rounded-lg text-3xl text-zinc-600 font-bold">
+      <div className="border border-zinc-800 w-full flex items-center justify-center py-6 rounded-lg text-2xl px-2 text-center xs:text-3xl text-zinc-600 font-bold">
         Showing results for "{searchString}"
       </div>
       <div className="flex flex-wrap gap-x-5 gap-y-7 justify-evenly">

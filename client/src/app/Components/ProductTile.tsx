@@ -12,14 +12,14 @@ const ProductTile = (props: {
   discount: number;
 }) => {
   return (
-    <div className="w-56">
-      <div className="relative h-64 w-full overflow-hidden rounded-lg mb-2">
+    <div className="w-full xs:w-72">
+      <div className="relative h-[28rem] xs:h-96 w-full overflow-hidden rounded-lg mb-2">
         <Image
           src={generateImageUrl(props.imgUrl)}
           alt={`${props.name} image`}
           className="hover:scale-110 hover:transition-transform duration-500 object-cover"
           fill={true}
-          // sizes="(max-width: 600px) 80vw,(max-width: 600px)"
+          sizes="(max-width: 600px) 80vw,(max-width: 600px)"
         ></Image>
       </div>
       <div className="flex gap-1 justify-between">

@@ -29,7 +29,7 @@ export default function Page() {
             setError("Passwords do not match");
             return;
           }
-          fetch("https://1f24-103-92-43-247.ngrok-free.app/auth", {
+          fetch("http://localhost:5050/auth", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

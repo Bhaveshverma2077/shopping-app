@@ -28,6 +28,7 @@ type OrderItemType = {
   id: string;
   products: Array<CartItemType>;
   finalPriceIncludingTax: number;
+  purchaseDateAndTime: string;
 };
 
 export type { Product, CartItemType, OrderItemType, User };

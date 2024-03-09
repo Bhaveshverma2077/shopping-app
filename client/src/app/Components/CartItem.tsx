@@ -44,8 +44,8 @@ const CartItem = ({
   const product = productData!.product;
 
   return (
-    <div className="border border-zinc-800  h-28 flex gap-4 items-center justify-start px-3 rounded-lg">
-      <div className="flex-shrink-0 border border-zinc-800 rounded-lg overflow-hidden">
+    <div className="border border-zinc-800 p-4 flex gap-4 items-center justify-start px-3 rounded-lg">
+      <div className="self-start flex-shrink-0 border border-zinc-800 rounded-lg overflow-hidden">
         <Image
           className="w-20 h-20 object-cover"
           height={120}
@@ -54,11 +54,11 @@ const CartItem = ({
           alt={`${product.name} image`}
         />
       </div>
-      <div className="flex-shrink-0 w-[6rem]">
+      <div className="flex-shrink-0 w-[6.5rem]">
         <p className="w-[8.5rem] text-ellipsis overflow-hidden  whitespace-nowrap">
           {product.name}
         </p>
-        <p className="text-gray-600 text-sm pb-2">
+        <p className="text-gray-600 text-[0.8rem] pb-2">
           {product.variants.join(" | ")}
         </p>
         <div className="pb-1 flex gap-2">

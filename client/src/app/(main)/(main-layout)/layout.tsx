@@ -8,7 +8,7 @@ import { useState } from "react";
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [showShopOrCart, setShowShopOrCart] = useState<"shop" | "cart">("shop");
   return (
-    <div className="w-full px-12 py-6 flex gap-6">
+    <div className="w-full px-4 md:px-12 py-6 flex gap-6">
       <div className="flex lg:w-[73%]  w-[100%] ">
         <div className="flex flex-col gap-6 w-full">
           <div className="flex gap-2 justify-between">

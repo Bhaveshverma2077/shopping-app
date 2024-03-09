@@ -58,12 +58,13 @@ export default function Page() {
         <div className="relative md:h-[28rem] h-[35rem] rounded-lg overflow-hidden   md:w-1/2">
           {data?.product.imageUrls.map((imageUrl, i) => (
             <img
+              key={`PRODUCT_IMG_${imageUrl}`}
               style={{ left: `${(i - selectedImageIndex) * 100}%` }}
               className={`transition-[left] absolute left-[${
                 (i - selectedImageIndex) * 100 + "%"
               }] object-cover md:h-[28rem] h-[35rem] w-full`}
               src={generateImageUrl(imageUrl)}
-              alt=""
+              alt="product image"
             />
           ))}
           <div className="absolute bottom-4 right-4 flex gap-2">
@@ -97,8 +98,8 @@ export default function Page() {
             {data?.product.variants.join(" | ")}
           </p>
           <p className="h-40 text-ellipsis overflow-hidden ">
-            {data?.product.description.length! > 250
-              ? `${data?.product.description.substring(0, 250)}...`
+            {data?.product.description.length! > 220
+              ? `${data?.product.description.substring(0, 220)}...`
               : data?.product.description}
           </p>
           <div className="py-4">

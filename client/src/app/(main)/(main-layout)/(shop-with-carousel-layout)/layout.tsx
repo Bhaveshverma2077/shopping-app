@@ -72,9 +72,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             {data?.carouselItems.map((carouselItem, i) => (
               <Image
                 key={carouselItem.id}
-                width={imageContainerRef.current?.clientWidth ?? 0}
+                width={imageContainerRef.current?.clientWidth! ?? 0}
                 height={256}
                 alt={`carousel image ${i + 1}`}
+                priority
+                loading="eager"
                 className="object-cover h-64 object-center flex-shrink-0 snap-center"
                 src={generateImageUrl(carouselItem.imageUrl)}
               ></Image>
