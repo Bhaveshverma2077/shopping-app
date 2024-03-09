@@ -26,6 +26,7 @@ const Orders = () => {
   }
 
   const orders = userData.user.orders;
+  console.log(orders);
 
   return (
     <div className="max-h-[50rem] customized-scrollbar overflow-hidden overflow-y-auto">
@@ -34,7 +35,7 @@ const Orders = () => {
           key={orderItemData.id}
           orderId={orderItemData.id}
           products={orderItemData.products}
-          date={new Date()}
+          date={new Date(+orderItemData.purchaseDateAndTime)}
           price={orderItemData.finalPriceIncludingTax}
         ></OrderItem>
       ))}
