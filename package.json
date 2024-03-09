@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "node server.mjs"
+    "client": "cd client && npm run dev",
+    "server": "node server.mjs",
+    "dev": "concurrently -c \"#FF407D,#387ADF\" \"npm run server\" \"npm run client\""
   },
   "keywords": [],
   "author": "",
@@ -20,5 +22,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.1.1",
     "validator": "^13.11.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
   }
 }
